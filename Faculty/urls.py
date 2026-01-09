@@ -15,4 +15,5 @@ urlpatterns = [
   path('delnotes/<int:did>',views.delnotes,name="delnotes"),
   path('Post/',views.Post,name="Post"), 
   path('delpost/<int:did>',views.delpost,name="delpost"), 
+  
 ]

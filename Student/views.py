@@ -91,4 +91,9 @@ def delpost(request,did):
 def ViewPost(request):
     post=tbl_post.objects.all()
     return render(request,'Student/ViewPost.html',{'post':post})
+def likepost(request,pid):
+    student=tbl_student.objects.get(id=request.session["sid"])
+    postid=tbl_post.objects.get(id=pid)
+    tbl_like.objects.create(post=postid,student=student)
+    return redirect("Student:ViewPost")
 

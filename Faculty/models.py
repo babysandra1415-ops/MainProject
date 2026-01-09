@@ -20,3 +20,7 @@ class tbl_post(models.Model):
     college=models.ForeignKey(tbl_college,on_delete=models.CASCADE,null=True)
     post_type=models.IntegerField(default=0)
     post_pd=models.DateField(auto_now_add=True)
+class tbl_like(models.Model):
+    post=models.ForeignKey(tbl_post,on_delete=models.CASCADE)
+    student=models.ForeignKey(tbl_student,on_delete=models.CASCADE)
+    faculty=models.ForeignKey(tbl_faculty,on_delete=models.CASCADE)
