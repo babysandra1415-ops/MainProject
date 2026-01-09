@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollegeList</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table border="1" align="center">
+            <tr>
+                <td>SlNo</td>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Contact</td>
+                <td>Address</td>
+                <td>Photo</td>
+                <td>Proof</td>
+                <td>Logo</td>
+                <td>District</td>
+                <td>Place</td>
+                <td>Actions</td>
+            </tr>
+            {% for i in colleges %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.college_name }}</td>
+                <td>{{ i.college_email }}</td>
+                <td>{{ i.college_contact }}</td>
+                <td>{{ i.college_address }}</td>
+                <td><img src="{{i.college_photo.url}}" width="100" height="100"/></td>
+                <td><img src="{{i.college_proof.url}}" width="100" height="100"/></td>
+                <td><img src="{{i.college_logo.url}}" width="100" height="100"/></td>
+                <td>{{ i.place.district.district_name }}</td>
+                <td>{{ i.place.place_name }}</td>
+                <td><a href="{% url 'Admin:acceptcollege' i.id %}">accept</a>|<a href="{% url 'Admin:rejectcollege' i.id %}">reject</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Admin:CollegeList' %}";
+</script>
+    {% endif %}

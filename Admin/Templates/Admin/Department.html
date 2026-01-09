@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h1 align="center">Department</h1>
+        <table border="1" align="center">
+            <tr>
+                <td>Department</td>
+                <td><input type="text" name="txt_department" id="txt_department" value="{{editdata.department_name}}"></td>
+            </tr>
+            <tr>
+                
+                <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+            </tr>
+        </table>
+        </form>
+        <table border="1" align="center">
+       
+          <tr>
+            <td>SlNo</td>
+            <td>Department</td>
+            <td>Actions</td>
+          </tr>
+               {% for i in department %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.department_name}}</td>
+            <td><a href="{% url 'Admin:deldepartment' i.id %}">Delete</a>|<a href="{% url 'Admin:editdepartment' i.id %}">Edit</a></td>
+          </tr>
+          {% endfor %}
+        </table>
+        
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Admin:Department' %}";
+</script>
+{% endif %}
+{% if msg1 %}
+<script>
+    alert("{{msg1}}")
+    window.location="{% url 'Admin:Department' %}";
+</script>
+{% endif %}
+{% if msg2 %}
+<script>
+    alert("{{msg2}}")
+    window.location="{% url 'Admin:Department' %}";
+</script>
+{% endif %}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h1 align="center">Course</h1>
+        <table border="1" align="center">
+            <tr>
+                <td>Department</td>
+                <td><select name="sel_department" id="sel_department">
+                <option value="">--Select--</option>
+                {% for i in department %}
+                <option
+                {% if i.id == editdata.department_id %}
+                selected
+                {% endif %}
+                value="{{i.id}}">{{i.department_name}}</option>
+                {% endfor %}
+            </select></td>
+            </tr>
+            <tr>
+                <td>Course</td>
+                <td><input type="text" name="txt_course" id="txt_course" value="{{editdata.course_name}}"></td>
+            </tr>
+            <tr>
+                
+                <td colspan="2" align="center"><input type="submit" value="submit"></td>
+            </tr>
+        </table>
+        <table border="1" align="center">
+        <tr>
+            <td>SI.NO</td>
+            <td>Department</td>
+            <td>Course</td>
+            <td>Action</td>
+        </tr>
+        {% for i in course %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.department.department_name}}</td>
+            <td>{{i.course_name}}</td>
+            <td><a href="{% url 'Admin:delcourse' i.id %}">Delete |</a>
+                    <a href="{% url 'Admin:editcourse' i.id %}">Edit
+                </a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+    </form>
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Admin:Course' %}";
+</script>
+{% endif %}
+{% if msg1 %}
+<script>
+    alert("{{msg1}}")
+    window.location="{% url 'Admin:Course' %}";
+</script>
+{% endif %}
+{% if msg2 %}
+<script>
+    alert("{{msg2}}")
+    window.location="{% url 'Admin:Course' %}";
+</script>
+{% endif %}

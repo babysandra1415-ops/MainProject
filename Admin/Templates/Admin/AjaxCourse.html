@@ -1,0 +1,8 @@
+<option value="">--Select--</option>
+{% for i in course %}
+<option
+                {% if i.id == editdata.course_id %}
+                selected
+                {% endif %}
+value="{{i.id}}">{{i.course_name}}</option>
+{% endfor %}

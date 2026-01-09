@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration</title>
+</head>
+
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1 align="center">Student Registration</h1>
+        <table align="center" border="1">
+            <tr>
+                <td>Name</td>
+                <td><input type="text" name="txt_name" id="txt_name"></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" name="txt_email" id="txt_email"></td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td><input type="text" name="txt_contact" id="txt_contact"></td>
+            </tr>
+            <tr>
+                <td>UserName</td>
+                <td><input type="text" name="txt_username" id="txt_username"></td>
+            </tr>
+            <tr>
+                <td>Bio</td>
+                <td><input type="text" name="txt_bio" id="txt_bio"></td>
+            </tr>
+            <tr>
+                <td>Photo</td>
+                <td><input type="file" name="file_photo" id="file_photo"></td>
+            </tr>
+            <tr>
+                <td>Account Type</td>
+                <td><input type="radio" name="txt_account" id="txt_account" value="1">Private<input type="radio"
+                        name="txt_account" id="txt_account" value="0">Public</td>
+            </tr>
+            <tr>
+                <td>College</td>
+                <td><select name="sel_college" id="sel_college">
+                        <option value="">--select--</option>
+                        {% for i in college %}
+                        <option value="{{i.id}}">{{i.college_name}}
+
+                        </option>
+                        {% endfor %}
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Department</td>
+                <td><select name="sel_department" id="sel_department">
+                        <option value="">--select--</option>
+
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Course</td>
+                <td><select name="sel_course" id="sel_course">
+                        <option value="">--select--</option>
+
+                    </select></td>
+            </tr>
+            <tr>
+                <td>AcademicYear</td>
+                <td><select name="sel_year" id="sel_year">
+                        <option value="">--select--</option>
+                        {% for i in year %}
+                        <option value="{{i.id}}">{{i.academicyear_year}}
+
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="txt_password" id="txt_password"></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Guest:Login' %}";
+</script>
+{% endif %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_college").change(function () {
+
+        var did = $(this).val();
+        var ur = "{% url 'Guest:AjaxDepartment' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, },
+            success: function (data) {
+                $("#sel_department").html(data);
+            },
+        });
+    });
+
+
+    $("#sel_department").change(function () {
+        var college = document.getElementById("sel_college").value
+        var did = $(this).val();
+        var ur = "{% url 'Guest:AjaxCourse' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, college:college},
+            success: function (data) {
+                $("#sel_course").html(data);
+            },
+        });
+    });
+</script>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Posts</title>
+</head>
+<body>
+
+<table align="center" width="40%" cellpadding="6">
+{% for i in post %}
+
+<!-- Header: Profile Photo + Name -->
+<tr>
+    <td width="15%" align="center">
+        {% if i.faculty and i.faculty.faculty_photo %}
+            <img src="{{ i.faculty.faculty_photo.url }}" width="50" height="50">
+        {% elif i.student and i.student.student_photo %}
+            <img src="{{ i.student.student_photo.url }}" width="50" height="50">
+        {% elif i.college and i.college.college_logo %}
+            <img src="{{ i.college.college_logo.url }}" width="50" height="50">
+        {% endif %}
+    </td>
+
+    <td width="85%">
+        <b>
+            {% if i.faculty %}
+                {{ i.faculty.faculty_name }}
+            {% elif i.student %}
+                {{ i.student.student_name }}
+            {% elif i.college %}
+                {{ i.college.college_name }}
+            {% endif %}
+        </b>
+    </td>
+</tr>
+
+<!-- Post Image -->
+<tr>
+    <td colspan="2" align="center">
+        <img src="{{ i.post_photo.url }}" width="100%">
+    </td>
+</tr>
+
+<!-- Action Row -->
+<tr>
+    <td colspan="2">
+       <a href="{% url 'Student:likepost' i.id %}">Like</a> &nbsp;
+       <a href="">Comment</a>
+    </td>
+</tr>
+
+<!-- Caption -->
+<tr>
+    <td colspan="2">
+        
+        {{ i.post_description }}
+    </td>
+</tr>
+
+<!-- Separator -->
+<tr>
+    <td colspan="2"><hr></td>
+</tr>
+
+{% endfor %}
+</table>
+
+</body>
+</html>

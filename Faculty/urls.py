@@ -1,0 +1,18 @@
+from django.urls import path,include
+from Faculty import views
+app_name="Faculty"
+
+urlpatterns = [
+  path('HomePage/',views.HomePage,name="HomePage"),  
+  path('MyProfile/',views.MyProfile,name="MyProfile"),  
+  path("EditProfile/",views.EditProfile,name="EditProfile"),
+  path('topublic/<int:pid>',views.topublic,name="topublic"),
+  path('toprivate/<int:prid>',views.toprivate,name="toprivate"),
+  path("ChangePassword/",views.ChangePassword,name="ChangePassword"),
+  path("Notes/",views.Notes,name="Notes"),
+  path("AjaxCourse/",views.AjaxCourse,name="AjaxCourse"),
+  path("AjaxSubject/",views.AjaxSubject,name="AjaxSubject"),
+  path('delnotes/<int:did>',views.delnotes,name="delnotes"),
+  path('Post/',views.Post,name="Post"), 
+  path('delpost/<int:did>',views.delpost,name="delpost"), 
+]

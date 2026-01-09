@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollegeDepartments</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h1 align="center">Add Departments</h1>
+        <table border="1" align="center">
+            <tr>
+                <td>Department</td>
+                <td><select name="sel_department" id="sel_department">
+                <option value="">--Select--</option>
+                {% for i in department %}
+                <option value="{{i.id}}">{{i.department_name}}</option>
+                {% endfor %}
+            </select></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+               
+            </tr>
+        </table>
+    </form>
+    <table border="1" align="center">
+        <tr>
+            <td>SlNo</td>
+            <td>Department</td>
+            <td>Action</td>
+        </tr>
+        {% for i in collegedepartment %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.department.department_name}}</td>
+            <td><a href="{% url 'College:deldepartment' i.id %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

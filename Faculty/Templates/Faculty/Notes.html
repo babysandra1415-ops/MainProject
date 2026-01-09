@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+</head>
+
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        <h1 align="center">Notes</h1>
+        {% csrf_token %}
+        <table border="1" align="center">
+            <tr>
+                <td>Description</td>
+                <td><input type="text" name="txt_description" id="txt_description"></td>
+            </tr>
+            <tr>
+                <td>File</td>
+                <td><input type="file" name="file_notes" id="file_notes"></td>
+            </tr>
+
+            <tr>
+                <td>Course</td>
+                <td><select name="sel_course" id="sel_course">
+                        <option value="">--Select Course</option>
+
+                        {% for i in course %}
+                        <option value="{{i.course.id}}">{{i.course.course_name}}</option>
+                        {% endfor %}
+                    </select></td>
+            </tr>
+
+            <tr>
+                <td>Semester</td>
+                <td><select name="sel_semester" id="sel_semester">
+                        <option value="">--select--</option>
+                        {% for i in semester %}
+                        <option value="{{i.id}}">{{i.semester_name}}
+
+                        </option>
+                        {% endfor %}
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Subject</td>
+                <td><select name="sel_subject" id="sel_subject">
+                        <option value="">--select--</option>
+                </td>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+
+            </tr>
+        </table>
+
+    </form>
+    <table border="1" align="center">
+        <tr>
+            <td>SlNo</td>
+
+            <td>Course</td>
+            <td>Semester</td>
+            <td>Subject</td>
+            <td>Description</td>
+            <td>File</td>
+            <td>Actions</td>
+        </tr>
+        {% for i in notes %}
+        <tr>
+
+            <td>{{forloop.counter}}</td>
+            <td>{{i.subject.course.course_name}}</td>
+
+            <td>{{i.subject.semester.semester_name}}</td>
+            <td>{{i.subject.subject_name}}</td>
+            <td>{{i.notes_description}}</td>
+            <td><a href="{{i.notes_file.url}}">File</a></td>
+
+            <td><a href="{% url 'Faculty:delnotes' i.id %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Faculty:Notes' %}";
+</script>
+{% endif %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_semester").change(function () {
+        var course = document.getElementById("sel_course").value
+        var semid = $(this).val();
+        var ur = "{% url 'College:AjaxSubject' %}"
+        $.ajax({
+            url: ur,
+            data: { semid: semid, course: course },
+            success: function (data) {
+                $("#sel_subject").html(data);
+            },
+        });
+    }); 
+</script>

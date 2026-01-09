@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject</title>
+</head>
+
+<body >
+    <form action="" method="post">
+        {% csrf_token %}
+        <h1 align="center">Subject</h1>
+        <table border="1" align="center">
+            <tr>
+                <td>Department</td>
+                <td><select name="sel_department" id="sel_department">
+                        <option value="">--Select--</option>
+                        {% for i in department %}
+                        <option {% if i.id == editdata.course.department_id %} selected {% endif %} value="{{i.id}}">
+                            {{i.department_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Course</td>
+                <td><select name="sel_course" id="sel_course">
+                        <option value="">--Select--</option>
+                        {% if editdata.course %}
+                        <option value="{{editdata.course.id}}" selected>{{editdata.course.course_name}}</option>
+                        {% endif %}
+
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Semester</td>
+                <td><select name="sel_semester" id="sel_semester">
+                        <option value="">--Select--</option>
+                        {% for i in semester %}
+                        <option {% if i.id == editdata.semester_id %} selected {% endif %} value="{{i.id}}">
+                            {{i.semester_name}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Subject</td>
+                <td><input type="text" name="txt_subject" id="txt_subject" value="{{editdata.subject_name}}"></td>
+            </tr>
+            <tr>
+
+                <td colspan="2" align="center"><input type="submit" value="submit"></td>
+            </tr>
+
+
+        </table>
+    </form>
+    <table border="1" align="center">
+        <tr>
+            <td>SlNo</td>
+            <td>Department</td>
+            <td>Course</td>
+            <td>Semester</td>
+            <td>Subject</td>
+            <td>Actions</td>
+        </tr>
+        {% for i in subject %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.course.department.department_name}}</td>
+            <td>{{i.course.course_name}}</td>
+            <td>{{i.semester.semester_name}}</td>
+            <td>{{i.subject_name}}</td>
+            <td><a href="{% url 'Admin:delsubject' i.id %}">Delete</a>|<a
+                    href="{% url 'Admin:editsubject' i.id %}">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_department").change(function () {
+
+        var did = $(this).val();
+        var ur = "{% url 'Admin:AjaxCourse' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, },
+            success: function (data) {
+                $("#sel_course").html(data);
+            },
+        });
+    });
+</script>
+
+
+
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location = "{% url 'Admin:Subject' %}";
+</script>
+{% endif %}
+{% if msg1 %}
+<script>
+    alert("{{msg1}}")
+    window.location = "{% url 'Admin:Subject' %}";
+</script>
+{% endif %}
+{% if msg2 %}
+<script>
+    alert("{{msg2}}")
+    window.location = "{% url 'Admin:Subject' %}";
+</script>
+{% endif %}

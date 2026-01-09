@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category</title>
+</head>
+<body>
+    <form action="" method="post">
+        {% csrf_token %}
+        <h1 align="center">Category</h1>
+        <table border="1" align="center">
+            <tr>
+                <td>Category</td>
+                <td><input type="text" name="txt_category" id="txt_category" value="{{editdata.category_name}}"></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="submit"></td>
+               
+            </tr>
+        </table>
+    </form>
+    </body><br>
+    <table border="1" align="center">
+        <tr>
+            <td>SlNo</td>
+            <td>Category</td>
+            <td>Actions</td>
+        </tr>
+        {% for i in category %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.category_name}}</td>
+            <td><a href="{% url 'Admin:delcategory' i.id %}">Delete</a>|<a href="{% url 'Admin:editcategory' i.id %}">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Admin:Category' %}";
+</script>
+{% endif %}
+</html>

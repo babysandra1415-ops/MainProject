@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FacultyRegistration</title>
+</head>
+
+<body>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1 align="center">FacultyRegistration</h1>
+        <table border="1" align="center">
+            <tr>
+                <td>Name</td>
+                <td><input type="text" name="txt_name" id="txt_name"></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" name="txt_email" id="txt_email"></td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td><input type="text" name="txt_contact" id="txt_contact"></td>
+            </tr>
+            <tr>
+                <td>Photo</td>
+                <td><input type="file" name="file_photo" id="file_photo"></td>
+            </tr>
+
+            <td>Department</td>
+            <td><select name="sel_department" id="sel_department">
+                <option value="">--select--</option>
+                {% for i in department %}
+                <option value="{{i.id}}">{{i.department.department_name}}</option>
+                {% endfor %}
+                </select></td>
+            <tr>
+                <td>Account Type</td>
+                <td><input type="radio" name="txt_account" id="txt_account" value="1">Private<input type="radio"
+                        name="txt_account" id="txt_account" value="0">Public</td>
+            </tr>
+            <tr>
+                <td>Biodata</td>
+                <td><input type="text" name="txt_biodata" id="txt_biodata"></td>
+            </tr>
+            <tr>
+                <td>Username</td>
+                <td><input type="text" name="txt_username" id="txt_username"></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="txt_password" id="txt_password"></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+
+            </tr>
+        </table>
+    </form>
+    <table border="1" align="center">
+        <tr>
+            <td>SlNo</td>
+            <td>Name</td>
+            <td>Email</td>
+            <td>Department</td>
+            <td>Contact</td>
+            <td>Biodata</td>
+            <td>AccountType</td>
+            <td>Username</td>
+            <td>Photo</td>
+
+            <td>Actions</td>
+        </tr>
+        {% for i in faculty %}
+        <tr>
+
+            <td>{{forloop.counter}}</td>
+            <td>{{i.faculty_name}}</td>
+            <td>{{i.faculty_email}}</td>
+            <td>{{i.department.department.department_name}}</td>
+            <td>{{i.faculty_contact}}</td>
+            <td>{{i.faculty_bio}}</td>
+            <td>{% if faculty.faculty_accounttype == 1 %}
+                Private
+                {% else %}
+                Public
+                {% endif %}</td>
+            <td>{{i.faculty_username}}</td>
+            <td><img src="{{i.faculty_photo.url}}" width="100" height="100" /></td>
+            <td><a href="{% url 'College:delfaculty' i.id %}">Delete</a><a
+                    href="{% url 'College:AssignSubject' i.id %}">AssignSubject</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>
+{% if msg %}
+<script>
+
+    alert("{{msg}}")
+    window.location = "{% url 'College:FacultyRegistration' %}";
+</script>
+{% endif %}
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_department").change(function () {
+
+        var did = $(this).val();
+        var ur = "{% url 'College:AjaxCollegeCourse' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, },
+            success: function (data) {
+                $("#sel_course").html(data);
+            },
+        });
+    }); -->

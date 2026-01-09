@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViewNotes</title>
+</head>
+<body>
+    <form action="" method="post">
+        <h1 align="center">ViewNotes</h1>
+        {% csrf_token %}
+        <table border="1" align="center">
+            <tr>
+                <td>Department</td>
+                <td><select name="sel_department" id="sel_department">
+                        <option value="">--select--</option>
+                        {% for i in department %}
+                        <option value="{{i.id}}">{{i.department_name}}
+
+                        </option>
+                        {% endfor %}
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Course</td>
+                <td><select name="sel_course" id="sel_course"></select></td>
+            </tr>
+            <tr>
+                <td>Semester</td>
+                <td><select name="sel_semester" id="sel_semester">
+                        <option value="">--select--</option>
+                        {% for i in semester %}
+                        <option value="{{i.id}}">{{i.semester_name}}
+
+                        </option>
+                        {% endfor %}
+                    </select></td>
+            </tr>
+            <tr>
+                <td>Subject</td>
+                <td><select name="sel_subject" id="sel_subject"></select></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+                
+            </tr>
+        </table>
+    </form>
+    <table align="center" border="1">
+        <tr>
+            <td>SlNo</td>
+            <td>File</td>
+            <td>Description</td>
+        </tr>
+        {% for i in notes %}
+        <tr>
+
+            <td>{{forloop.counter}}</td>
+            <td><a href="{{i.notes_file.url}}">File</a></td>
+            <td>{{i.notes_description}}</td>
+        </tr>
+         {% endfor %}
+    </table>
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_department").change(function () {
+
+        var did = $(this).val();
+        var ur = "{% url 'Student:AjaxCourse' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, },
+            success: function (data) {
+                $("#sel_course").html(data);
+            },
+        });
+    });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $("#sel_semester").change(function () {
+        var course = document.getElementById("sel_course").value
+        var semid = $(this).val();
+        var ur = "{% url 'College:AjaxSubject' %}"
+        $.ajax({
+            url: ur,
+            data: { semid: semid, course: course },
+            success: function (data) {
+                $("#sel_subject").html(data);
+            },
+        });
+    }); 
+</script>

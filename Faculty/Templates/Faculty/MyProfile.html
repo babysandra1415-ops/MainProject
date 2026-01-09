@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyProfile</title>
+</head>
+<body>
+    
+        <table border="1" align="center">
+            <tr>
+                
+                <td colspan="2" align="center">
+                    <img src= "{{facultydata.faculty_photo.url}}" width="300" height="300">
+                </td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>{{facultydata.faculty_name}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{facultydata.faculty_email}}</td>
+            </tr>
+            <tr>
+                <td>Username</td>
+                <td>{{facultydata.faculty_username}}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>{{facultydata.faculty_contact}}</td>
+            </tr>
+             <tr>
+                <td>Biodata</td>
+                <td>{{facultydata.faculty_bio}}</td>
+            </tr>
+             <tr>
+                <td>College</td>
+                <td>{{facultydata.college.college_name}}</td>
+            </tr>
+            <tr>
+                <td>AccountType</td>
+                <td> 
+                    {% if facultydata.faculty_accounttype == 1 %}
+                    Private
+                   <a href="{% url 'Faculty:topublic' facultydata.id %}">Change to Public</a>
+                    {% else %}
+                    Public  <a href="{% url 'Faculty:toprivate' facultydata.id %}">Change to Private</a>
+                    {% endif %}
+
+                </tr>
+            <tr>
+                <td colspan="2" align="center" ><a href="{% url 'Faculty:EditProfile' %}">EditProfile |
+                    <a href="{% url 'Faculty:ChangePassword' %}"> ChangePassword
+                </td>
+            
+            </tr>
+        </table>
+    
+</body>
+</html>
+{% if msg %}
+<script>
+    alert("{{msg}}")
+    window.location="{% url 'Faculty:MyProfile' %}";
+</script>
+    {% endif %}
+{% if msg1 %}
+<script>
+    alert("{{msg1}}")
+    window.location="{% url 'Faculty:MyProfile' %}";
+</script>
+    {% endif %}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyProfile</title>
+</head>
+<body>
+    
+        <table border="1" align="center">
+            <tr>
+                
+                <td colspan="2" align="center">
+                    <img src= "{{collegedata.college_photo.url}}" width="300" height="300"/>
+                </td>
+            </tr>
+             <tr>
+                
+                <td colspan="2" align="center">
+                    <img src= "{{collegedata.college_logo.url}}" width="300" height="300"/>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>Name</td>
+                <td>{{collegedata.college_name}}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{collegedata.college_email}}</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>{{collegedata.college_address}}</td>
+            </tr>
+            <tr>
+                <td>Contact</td>
+                <td>{{collegedata.college_contact}}</td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center" ><a href="{% url 'College:EditProfile' %}">EditProfile /
+                    <a href="{% url 'College:ChangePassword' %}"> ChangePassword
+                </td>
+            
+            </tr>
+        </table>
+    
+</body>
+</html>
