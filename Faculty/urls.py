@@ -14,6 +14,9 @@ urlpatterns = [
   path("AjaxSubject/",views.AjaxSubject,name="AjaxSubject"),
   path('delnotes/<int:did>',views.delnotes,name="delnotes"),
   path('Post/',views.Post,name="Post"), 
-  path('delpost/<int:did>',views.delpost,name="delpost"), 
-  
+  path('delpost/<int:did>',views.delpost,name="delpost"),
+  path('ViewPost/',views.ViewPost,name="ViewPost"), 
+  path('likepost/<int:pid>',views.likepost,name="likepost"), 
+  path('Comment/<int:cid>',views.Comment,name="Comment"),
+  path('ViewCollege/',views.ViewCollege,name="ViewCollege"),
 ]

@@ -107,5 +107,58 @@ def Post(request):
 def delpost(request,did):
     tbl_post.objects.get(id=did).delete()
     return redirect("Faculty:Post")
+def ViewPost(request):
+    post=tbl_post.objects.all()
+    return render(request,'Faculty/ViewPost.html',{'post':post})
+def likepost(request,pid):
+    faculty=tbl_faculty.objects.get(id=request.session["fid"])
+    postid=tbl_post.objects.get(id=pid)
+    tbl_like.objects.create(post=postid,faculty=faculty)
+    return redirect("Faculty:ViewPost")
+
+
+def Comment(request, cid):
+    post = tbl_post.objects.get(id=cid)
+    faculty = tbl_faculty.objects.get(id=request.session["fid"])
+
+    if request.method == "POST":
+
+        form_type = request.POST.get("type")
+
+        # ADD COMMENT
+        if form_type == "comment":
+            comment_text = request.POST.get("comment")
+
+            if comment_text:  
+                tbl_comment.objects.create(
+                    post=post,
+                    faculty=faculty,
+                    comment_content=comment_text
+                )
+        elif form_type == "reply":
+            reply_text = request.POST.get("reply")
+            comment_id = request.POST.get("comment_id")
+
+            if reply_text and comment_id:
+                comment = tbl_comment.objects.get(id=comment_id)
+                tbl_commentreply.objects.create(
+                    comment=comment,
+                    faculty=faculty,
+                    commentreply_content=reply_text
+                )
+
+        return redirect("Faculty:Comment", cid=cid)
+
+    comments = tbl_comment.objects.filter(post=post).order_by("-id")
+
+    return render(request, "Faculty/Comment.html", {
+        "comment": comments,
+        "post": post
+    })
+
+
+def ViewCollege(request):
+    college=tbl_college.objects.filter(college_status=1)
+    return render(request,'Faculty/ViewCollege.html',{'college':college})
 
 

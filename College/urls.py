@@ -19,4 +19,7 @@ urlpatterns = [
   path('delsubject/<int:did>',views.delsubject,name="delsubject"),
   path('Post/',views.Post,name="Post"),
   path('delpost/<int:did>',views.delpost,name="delpost"),
+   path('ViewPost/',views.ViewPost,name="ViewPost"),
+  path('likepost/<int:pid>',views.likepost,name="likepost"),
+  
 ]

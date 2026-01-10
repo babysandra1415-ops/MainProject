@@ -82,7 +82,7 @@ def Login(request):
 
         admincount=tbl_admin.objects.filter(admin_email=email,admin_password=password).count()
         usercount=tbl_user.objects.filter(user_email=email,user_password=password).count()
-        collegecount=tbl_college.objects.filter(college_email=email,college_password=password).count()
+        collegecount=tbl_college.objects.filter(college_email=email,college_password=password,college_status=1).count()
         facultycount=tbl_faculty.objects.filter(faculty_email=email,faculty_password=password).count()
         studentcount=tbl_student.objects.filter(student_email=email,student_password=password).count()
         

@@ -152,3 +152,11 @@ def Post(request):
 def delpost(request,did):
     tbl_post.objects.get(id=did).delete()
     return redirect("College:Post")
+def ViewPost(request):
+    post=tbl_post.objects.all()
+    return render(request,'College/ViewPost.html',{'post':post})
+def likepost(request,pid):
+    college=tbl_college.objects.get(id=request.session["cid"])
+    postid=tbl_post.objects.get(id=pid)
+    tbl_like.objects.create(post=postid,college=college)
+    return redirect("College:ViewPost")

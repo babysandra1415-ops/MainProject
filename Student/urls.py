@@ -15,4 +15,9 @@ urlpatterns = [
   path('delpost/<int:did>',views.delpost,name="delpost"),
   path('ViewPost/',views.ViewPost,name="ViewPost"), 
   path('likepost/<int:pid>',views.likepost,name="likepost"),
+  path('Comment/<int:cid>',views.Comment,name="Comment"), 
+  path('ViewCollege/',views.ViewCollege,name="ViewCollege"),
+  path('ViewFaculty/',views.ViewFaculty,name="ViewFaculty"),
+  path('Follow/<int:cid>',views.Follow,name="Follow"),
+  path('FollowF/<int:fid>',views.FollowF,name="FollowF"),
 ]

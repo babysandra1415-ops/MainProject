@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colleges</title>
+</head>
+<body>
+   <form action="" method="post">
+    <h1 align="center">Colleges</h1>
+    {% csrf_token %}
+    <table align="center" border="1">
+        <tr>
+            <td>Slno</td>
+            <td>College</td>
+            <td>Actions</td>
+        </tr>
+
+        {% for i in college %}
+        <tr>
+           <td>{{forloop.counter}}</td>
+            <td>{{i.college_name}}</td>
+            <td><a href="{% url 'Student:Follow' i.id %}">Follow</a></td>
+            {% endfor %}
+        </tr>
+    </table>
+   </form> 
+</body>
+</html>

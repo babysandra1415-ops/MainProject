@@ -26,3 +26,10 @@
     </form>
 </body>
 </html>
+{% if msg %}
+<script>
+
+    alert("{{msg}}")
+    window.location="{% url 'Guest:Login' %}";
+</script>
+{% endif %}
