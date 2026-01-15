@@ -19,5 +19,9 @@ urlpatterns = [
   path('ViewCollege/',views.ViewCollege,name="ViewCollege"),
   path('ViewFaculty/',views.ViewFaculty,name="ViewFaculty"),
   path('Follow/<int:cid>',views.Follow,name="Follow"),
-  path('FollowF/<int:fid>',views.FollowF,name="FollowF"),
+  path('FollowF/<int:Fid>',views.FollowF,name="FollowF"),
+  path('FollowU/<int:uid>',views.FollowU,name="FollowU"),
+  path('StudentList/',views.StudentList,name="StudentList"),
+  path('FollowRequest/',views.FollowRequest,name="FollowRequest"),
+  # path('MyRequest/',views.MyRequest,name="MyRequest"),
 ]

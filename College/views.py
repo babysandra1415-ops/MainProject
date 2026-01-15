@@ -160,3 +160,65 @@ def likepost(request,pid):
     postid=tbl_post.objects.get(id=pid)
     tbl_like.objects.create(post=postid,college=college)
     return redirect("College:ViewPost")
+def Comment(request, cid):
+    post = tbl_post.objects.get(id=cid)
+    college = tbl_college.objects.get(id=request.session["cid"])
+
+    if request.method == "POST":
+
+        form_type = request.POST.get("type")
+
+        # ADD COMMENT
+        if form_type == "comment":
+            comment_text = request.POST.get("comment")
+
+            if comment_text:  
+                tbl_comment.objects.create(
+                    post=post,
+                    college=college,
+                    comment_content=comment_text
+                )
+        elif form_type == "reply":
+            reply_text = request.POST.get("reply")
+            comment_id = request.POST.get("comment_id")
+
+            if reply_text and comment_id:
+                comment = tbl_comment.objects.get(id=comment_id)
+                tbl_commentreply.objects.create(
+                    comment=comment,
+                    college=college,
+                    commentreply_content=reply_text
+                )
+
+        return redirect("College:Comment", cid=cid)
+
+    comments = tbl_comment.objects.filter(post=post).order_by("-id")
+
+    return render(request, "College/Comment.html", {
+        "comment": comments,
+        "post": post
+    })
+def FollowF(request,fid):
+    college=tbl_college.objects.get(id=request.session["cid"])
+    facultyid=tbl_faculty.objects.get(id=fid)
+    tbl_follow.objects.create(fromcollege=college,tofaculty=facultyid)
+    return redirect("College:FacultyList")
+def FollowC(request,Cid):
+    college=tbl_college.objects.get(id=request.session["cid"])
+    collegeid=tbl_college.objects.get(id=Cid)
+    tbl_follow.objects.create(fromcollege=college,tocollege=collegeid)
+    return redirect("College:CollegeList")
+def FollowS(request,Sid):
+    college=tbl_college.objects.get(id=request.session["cid"])
+    studentid=tbl_student.objects.get(id=Sid)
+    tbl_follow.objects.create(fromcollege=college,tostudent=studentid)
+    return redirect("College:StudentList")
+def FacultyList(request):
+    faculty=tbl_faculty.objects.all()
+    return render(request,'College/FacultyList.html',{'faculty':faculty})
+def CollegeList(request):
+    college=tbl_college.objects.all()
+    return render(request,'College/CollegeList.html',{'college':college})
+def StudentList(request):
+    student=tbl_student.objects.all()
+    return render(request,'College/StudentList.html',{'users':student})

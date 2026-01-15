@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UserList</title>
+</head>
+<body>
+    <form action="" method="post">
+         {% csrf_token %}
+        <table border="1" align="center">
+            <tr>
+                <td>SI.NO</td>
+                <td>UserName</td>
+               
+                <td>Photo</td>
+                <td></td>
+            </tr>
+            {% for i in users %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.student_username }}</td>
+                
+                <td><img src= "{{i.student_photo.url}}" width="300" height="300" alt="user"/></td>
+                <td><a href="{% url 'Student:FollowU' i.id %}">Follow</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+</body>
+</html>

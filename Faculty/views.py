@@ -155,10 +155,31 @@ def Comment(request, cid):
         "comment": comments,
         "post": post
     })
+def Follow(request,cid):
+    faculty=tbl_faculty.objects.get(id=request.session["fid"])
+    collegeid=tbl_college.objects.get(id=cid)
+    tbl_follow.objects.create(fromfaculty=faculty,tocollege=collegeid)
+    return redirect("Faculty:ViewCollege")
+def FollowU(request,uid):
+    faculty=tbl_faculty.objects.get(id=request.session["fid"])
+    studentid=tbl_student.objects.get(id=uid)
+    tbl_follow.objects.create(fromfaculty=faculty,tostudent=studentid)
+    return redirect("Faculty:UserList")
 
+def FollowF(request,Fid):
+    faculty=tbl_faculty.objects.get(id=request.session["fid"])
+    facultyid=tbl_faculty.objects.get(id=Fid)
+    tbl_follow.objects.create(fromfaculty=faculty,tofaculty=facultyid)
+    return redirect("Faculty:ViewFaculty")
+def ViewFaculty(request):
+    faculty=tbl_faculty.objects.all()
+    return render(request,'Faculty/ViewFaculty.html',{'faculty':faculty})
 
 def ViewCollege(request):
     college=tbl_college.objects.filter(college_status=1)
     return render(request,'Faculty/ViewCollege.html',{'college':college})
+def UserList(request):
+    userdata=tbl_student.objects.all()
+    return render(request,'Faculty/UserList.html',{"users":userdata})
 
 

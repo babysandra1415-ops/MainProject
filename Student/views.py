@@ -96,17 +96,44 @@ def likepost(request,pid):
     postid=tbl_post.objects.get(id=pid)
     tbl_like.objects.create(post=postid,student=student)
     return redirect("Student:ViewPost")
-def Comment(request,cid):
-    student=tbl_student.objects.get(id=request.session["sid"])
-    postid=tbl_post.objects.get(id=cid)
-    Comments=tbl_comment.objects.all()
+def Comment(request, cid):
+    post = tbl_post.objects.get(id=cid)
+    student = tbl_student.objects.get(id=request.session["sid"])
+
     if request.method == "POST":
-        comment=request.POST.get("txt_reply")
-        
-        tbl_comment.objects.create(post=postid,student=student,comment_content=comment)
-        return render(request,'Student/Comment.html',{'comment':Comments})
-    else:
-        return render(request,'Student/Comment.html',{'comment':Comments})
+
+        form_type = request.POST.get("type")
+
+        # ADD COMMENT
+        if form_type == "comment":
+            comment_text = request.POST.get("comment")
+
+            if comment_text:  
+                tbl_comment.objects.create(
+                    post=post,
+                    student=student,
+                    comment_content=comment_text
+                )
+        elif form_type == "reply":
+            reply_text = request.POST.get("reply")
+            comment_id = request.POST.get("comment_id")
+
+            if reply_text and comment_id:
+                comment = tbl_comment.objects.get(id=comment_id)
+                tbl_commentreply.objects.create(
+                    comment=comment,
+                    student=student,
+                    commentreply_content=reply_text
+                )
+
+        return redirect("Student:Comment", cid=cid)
+
+    comments = tbl_comment.objects.filter(post=post).order_by("-id")
+
+    return render(request, "Student/Comment.html", {
+        "comment": comments,
+        "post": post
+    })
 def ViewCollege(request):
     college=tbl_college.objects.filter(college_status=1)
     return render(request,'Student/ViewCollege.html',{'college':college})
@@ -123,6 +150,18 @@ def FollowF(request,fid):
     facultyid=tbl_faculty.objects.get(id=fid)
     tbl_follow.objects.create(fromstudent=student,tofaculty=facultyid)
     return redirect("Student:ViewFaculty")
+def FollowU(request,uid):
+    student=tbl_student.objects.get(id=request.session["sid"])
+    studentid=tbl_student.objects.get(id=uid)
+    tbl_follow.objects.create(fromstudent=student,tostudent=studentid)
+    return redirect("Student:StudentList")
+def StudentList(request):
+    userdata=tbl_student.objects.all()
+    return render(request,'Student/StudentList.html',{"users":userdata})
+def FollowRequest(request):
+    student=tbl_student.objects.get(id=request.session["sid"])
+    request=tbl_follow.objects.filter(tostudent=student)
+    return render(request,'Student/FollowRequest.html',{"request":request})
 
 
 

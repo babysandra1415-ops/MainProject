@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requests</title>
+</head>
+<body>
+    <form action="" method="post">
+        <h1 align="center">FollowRequests</h1>
+    <table align="center" border="1">
+        
+        <tr>
+            <td>SlNo</td>
+            <td>Info</td>
+            <td>Actions</td>
+        </tr>
+         {% for i in request %}
+        <tr>
+
+            <td>{{forloop.counter}}</td>
+            <td>{{i.fromstudent.student_name}}</td>
+            <td><a href="">Follow</a>|<a href="">Cancel</a></td>
+        </tr>
+        {% endfor %}
+        
+         {% for i in request %}
+        <tr>
+
+            <td>{{forloop.counter}}</td>
+            <td>{{i.fromfaculty.faculty_name}}</td>
+            <td></td>
+        </tr>
+        {% endfor %}
+    </table>
+    </form>
+</body>
+</html>

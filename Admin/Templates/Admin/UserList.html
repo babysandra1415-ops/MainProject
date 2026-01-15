@@ -18,19 +18,19 @@
                 <td>District</td>
                 <td>Place</td>
                 <td>Photo</td>
-                <td></td>
+                
             </tr>
             {% for i in users %}
             <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ i.user_name }}</td>
-                <td>{{ i.user_email }}</td>
-                <td>{{ i.user_contact }}</td>
-                <td>{{ i.user_address }}</td>
+                <td>{{ i.student_name }}</td>
+                <td>{{ i.student_email }}</td>
+                <td>{{ i.student_contact }}</td>
+                <td>{{ i.student_address }}</td>
                 <td>{{ i.place.district.district_name }}</td>
                 <td>{{ i.place.place_name }}</td>
-                <td><img src= "{{i.user_photo.url}}" width="300" height="300" alt="user"/></td>
-                <td></td>
+                <td><img src= "{{i.student_photo.url}}" width="300" height="300" alt="user"/></td>
+                
             </tr>
             {% endfor %}
         </table>

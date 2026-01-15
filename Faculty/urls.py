@@ -18,5 +18,10 @@ urlpatterns = [
   path('ViewPost/',views.ViewPost,name="ViewPost"), 
   path('likepost/<int:pid>',views.likepost,name="likepost"), 
   path('Comment/<int:cid>',views.Comment,name="Comment"),
+  path('Follow/<int:cid>',views.Follow,name="Follow"),
+  path('FollowU/<int:uid>',views.FollowU,name="FollowU"),
+  path('FollowF/<int:Fid>',views.FollowF,name="FollowF"),
+  path('UserList/',views.UserList,name="UserList"), 
   path('ViewCollege/',views.ViewCollege,name="ViewCollege"),
+  path('ViewFaculty/',views.ViewFaculty,name="ViewFaculty"),
 ]

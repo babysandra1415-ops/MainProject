@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from Admin.models import *
 from Guest.models import *
+from College.models import *
 
 # Create your views here.
 def AdminRegistration(request):
@@ -123,7 +124,7 @@ def editsub(request,id):
     else:
         return render(request,'Admin/Subcategory.html',{'editdata':editdata,'category':category,'subcategory':subcategory})
 def UserList(request):
-    userdata=tbl_user.objects.all()
+    userdata=tbl_student.objects.all()
     return render(request,'Admin/UserList.html',{"users":userdata})
 def CollegeList(request):
     collegedata=tbl_college.objects.all()

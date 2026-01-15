@@ -110,4 +110,6 @@ def Login(request):
             return render(request,'Guest/Login.html',{'msg':' Invalid Email or Password '})
     else:
         return render(request,'Guest/Login.html')
+def index(request):
+    return render(request,'Guest/index.html')
     

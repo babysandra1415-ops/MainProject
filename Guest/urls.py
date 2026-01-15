@@ -10,6 +10,6 @@ urlpatterns = [
   path('StudentRegistration/',views.StudentRegistration,name="StudentRegistration"),
   path('AjaxCourse/',views.AjaxCourse,name="AjaxCourse"),
   path('AjaxDepartment/',views.AjaxDepartment,name="AjaxDepartment"),
- 
+  path('index/',views.index,name="index"),
   
 ]
