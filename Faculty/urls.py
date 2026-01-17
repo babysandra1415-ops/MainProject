@@ -20,8 +20,11 @@ urlpatterns = [
   path('Comment/<int:cid>',views.Comment,name="Comment"),
   path('Follow/<int:cid>',views.Follow,name="Follow"),
   path('FollowU/<int:uid>',views.FollowU,name="FollowU"),
-  path('FollowF/<int:Fid>',views.FollowF,name="FollowF"),
+  path('FollowF/<int:fid>',views.FollowF,name="FollowF"),
   path('UserList/',views.UserList,name="UserList"), 
   path('ViewCollege/',views.ViewCollege,name="ViewCollege"),
   path('ViewFaculty/',views.ViewFaculty,name="ViewFaculty"),
+  path('Followers/',views.Followers,name="Followers"),
+  path('acceptrequest/<int:aid>',views.acceptrequest,name="acceptrequest"),
+  path('rejectrequest/<int:rid>',views.rejectrequest,name="rejectrequest"),
 ]

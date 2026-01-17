@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from Guest.models import *
 from College.models import *
 from Faculty.models import *
+from django.db.models import Q
 # Create your views here.
 def HomePage(request):
     Student = tbl_student.objects.get(id=request.session['sid'])
@@ -134,35 +135,150 @@ def Comment(request, cid):
         "comment": comments,
         "post": post
     })
+
 def ViewCollege(request):
-    college=tbl_college.objects.filter(college_status=1)
-    return render(request,'Student/ViewCollege.html',{'college':college})
+    student = tbl_student.objects.get(id=request.session['sid'])
+    college = tbl_college.objects.filter(college_status=1)
+
+    followed_ids = tbl_follow.objects.filter(
+        fromstudent=student,
+        tocollege__isnull=False
+    ).values_list('tocollege_id', flat=True)
+
+    return render(request,'Student/ViewCollege.html',{
+        'college': college,
+        'followed_ids': followed_ids
+    })
+
 def ViewFaculty(request):
-    faculty=tbl_faculty.objects.all()
-    return render(request,'Student/ViewFaculty.html',{'faculty':faculty})
-def Follow(request,cid):
-    student=tbl_student.objects.get(id=request.session["sid"])
-    collegeid=tbl_college.objects.get(id=cid)
-    tbl_follow.objects.create(fromstudent=student,tocollege=collegeid)
-    return redirect("Student:ViewCollege")
-def FollowF(request,fid):
-    student=tbl_student.objects.get(id=request.session["sid"])
-    facultyid=tbl_faculty.objects.get(id=fid)
-    tbl_follow.objects.create(fromstudent=student,tofaculty=facultyid)
-    return redirect("Student:ViewFaculty")
-def FollowU(request,uid):
-    student=tbl_student.objects.get(id=request.session["sid"])
-    studentid=tbl_student.objects.get(id=uid)
-    tbl_follow.objects.create(fromstudent=student,tostudent=studentid)
-    return redirect("Student:StudentList")
+    student = tbl_student.objects.get(id=request.session['sid'])
+    faculty = tbl_faculty.objects.all()
+
+    followed_ids = tbl_follow.objects.filter(
+        fromstudent=student,
+        tofaculty__isnull=False
+    ).values_list('tofaculty_id', flat=True)
+
+    pending_ids = tbl_follow.objects.filter(
+        fromstudent=student,
+        tofaculty__isnull=False,
+        follow_status=0
+    ).values_list('tofaculty_id', flat=True)
+
+    return render(request,'Student/ViewFaculty.html',{
+        'faculty': faculty,
+        'followed_ids': followed_ids,
+        'pending_ids': pending_ids
+    })
+
 def StudentList(request):
-    userdata=tbl_student.objects.all()
-    return render(request,'Student/StudentList.html',{"users":userdata})
+    student = tbl_student.objects.get(id=request.session['sid'])
+    users = tbl_student.objects.exclude(id=student.id)
+
+    followed_ids = tbl_follow.objects.filter(
+        fromstudent=student,
+        tostudent__isnull=False
+    ).values_list('tostudent_id', flat=True)
+
+    pending_ids = tbl_follow.objects.filter(
+        fromstudent=student,
+        tostudent__isnull=False,
+        follow_status=0
+    ).values_list('tostudent_id', flat=True)
+
+    return render(request,'Student/StudentList.html',{
+        'users': users,
+        'followed_ids': followed_ids,
+        'pending_ids': pending_ids
+    })
+
+
+def Follow(request, cid):
+    student = tbl_student.objects.get(id=request.session["sid"])
+    college = tbl_college.objects.get(id=cid)
+
+    if not tbl_follow.objects.filter(fromstudent=student, tocollege=college).exists():
+        tbl_follow.objects.create(
+            fromstudent=student,
+            tocollege=college,
+            follow_status=1
+        )
+    return redirect("Student:ViewCollege")
+def FollowF(request, Fid):
+    student = tbl_student.objects.get(id=request.session["sid"])
+    faculty = tbl_faculty.objects.get(id=Fid)
+
+    status = 0 if faculty.faculty_accounttype == 1 else 1
+
+    if not tbl_follow.objects.filter(fromstudent=student, tofaculty=faculty).exists():
+        tbl_follow.objects.create(
+            fromstudent=student,
+            tofaculty=faculty,
+            follow_status=status
+        )
+    return redirect("Student:ViewFaculty")
+def FollowU(request, uid):
+    student = tbl_student.objects.get(id=request.session["sid"])
+    target = tbl_student.objects.get(id=uid)
+
+    status = 0 if target.student_accounttype == 1 else 1
+
+    if not tbl_follow.objects.filter(fromstudent=student, tostudent=target).exists():
+        tbl_follow.objects.create(
+            fromstudent=student,
+            tostudent=target,
+            follow_status=status
+        )
+    return redirect("Student:StudentList")
+
+
 def FollowRequest(request):
     student=tbl_student.objects.get(id=request.session["sid"])
     request=tbl_follow.objects.filter(tostudent=student)
     return render(request,'Student/FollowRequest.html',{"request":request})
 
+
+def Followers(request):
+    student = tbl_student.objects.get(id=request.session["sid"])
+
+    following = tbl_follow.objects.filter(
+        fromstudent=student
+    )
+
+    followers = tbl_follow.objects.filter(
+        tostudent=student,
+        follow_status=1
+    )
+    requests = tbl_follow.objects.filter(
+        tostudent=student,
+        follow_status=0
+    )
+
+    return render(
+        request,
+        "Student/Followers.html",
+        {
+            "following": following,
+            "followers": followers,
+            "requests": requests
+        }
+    )
+def acceptrequest(request,aid):
+    Follow=tbl_follow.objects.get(id=aid)
+    Follow.follow_status=1
+    Follow.save()
+    return redirect("Student:Followers")
+
+def rejectrequest(request,rid):
+    tbl_follow.objects.get(id=rid).delete()
+    return redirect("Student:Followers")
+
+def ViewCollegeProfile(request):
+    student=tbl_student.objects.get(id=request.session["sid"])
+    collegedata=tbl_follow.objects.filter(tostudent=student)
+    collegeid=tbl_follow.objects.get(fromstudent=student)
+    post=tbl_post.objects.filter(college_id=collegeid)
+    return render(request,'Student/ViewCollegeProfile.html',{"collegedata": collegedata,"post":post})
 
 
 

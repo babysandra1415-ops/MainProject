@@ -1,38 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Requests</title>
 </head>
+
 <body>
     <form action="" method="post">
         <h1 align="center">FollowRequests</h1>
-    <table align="center" border="1">
-        
-        <tr>
-            <td>SlNo</td>
-            <td>Info</td>
-            <td>Actions</td>
-        </tr>
-         {% for i in request %}
-        <tr>
+        <table align="center" border="1">
 
-            <td>{{forloop.counter}}</td>
-            <td>{{i.fromstudent.student_name}}</td>
-            <td><a href="">Follow</a>|<a href="">Cancel</a></td>
-        </tr>
-        {% endfor %}
-        
-         {% for i in request %}
-        <tr>
+            <tr>
+                <td>SlNo</td>
+                <td>Photo</td>
+                <td>Info</td>
+                <td>Actions</td>
+            </tr>
+            {% for i in request %}
+            <tr>
 
-            <td>{{forloop.counter}}</td>
-            <td>{{i.fromfaculty.faculty_name}}</td>
-            <td></td>
-        </tr>
-        {% endfor %}
-    </table>
+                <td>{{forloop.counter}}</td>
+                <td> {% if i.fromstudent %} <img src="{{i.fromstudent.student_photo.url}}" width="300"
+                        height="300" />
+                    {% elif i.fromfaculty %}
+                    <img src="{{i.fromfaculty.faculty_photo.url}}" width="300" height="300" />
+                    {% elif i.fromcollege %}
+                    <img src="{{i.fromcollege.college_photo.url}}" width="300" height="300" />
+                    {% endif %}
+                </td>
+                <td>
+                    {% if i.fromstudent %}
+                    {{ i.fromstudent.student_username }}
+
+                    {% elif i.fromfaculty %}
+                    {{ i.fromfaculty.faculty_username }}
+
+                    {% elif i.fromcollege %}
+                    {{ i.fromcollege.college_name }}
+
+                    {% endif %}
+
+
+
+                </td>
+                <td><a href="">Follow</a>|<a href="">Cancel</a>|
+
+
+                    <a href="{% url 'Student:ViewCollegeProfile' %}">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
     </form>
 </body>
+
 </html>

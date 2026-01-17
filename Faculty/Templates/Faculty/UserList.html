@@ -22,7 +22,15 @@
                 <td>{{ i.student_username }}</td>
                 
                 <td><img src= "{{i.student_photo.url}}" width="300" height="300" alt="user"/></td>
-                <td><a href="{% url 'Faculty:FollowU' i.id %}">Follow</a></td>
+                <td>{% if i.id in followed_ids %}
+                    {% if i.id in pending_ids %}
+                        <span>Request Sent</span>
+                    {% else %}
+                        <span>Following</span>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'Faculty:FollowU' i.id %}">Follow</a>
+                {% endif %}</td>
             </tr>
             {% endfor %}
         </table>

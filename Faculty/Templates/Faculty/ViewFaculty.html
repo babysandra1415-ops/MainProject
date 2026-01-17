@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colleges</title>
+    <title>Faculty</title>
 </head>
 <body>
    <form action="" method="post">
@@ -18,13 +18,21 @@
             <td>Actions</td>
         </tr>
 
-        {% for i in faculty %}
+        {% for i in facultys %}
         <tr>
            <td>{{forloop.counter}}</td>
             <td>{{i.faculty_name}}</td>
             <td>{{i.college.college_name}}</td>
              <td>{{i.department.department.department_name}}</td>
-            <td> <a href="{% url 'Faculty:FollowF' i.id %}">Follow</a></td>
+            <td> {% if i.id in followed_ids %}
+                    {% if i.id in pending_ids %}
+                        <span>Request Sent</span>
+                    {% else %}
+                        <span>Following</span>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'Faculty:FollowF' i.id %}">Follow</a>
+                {% endif %}</td>
             {% endfor %}
         </tr>
     </table>

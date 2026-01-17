@@ -23,5 +23,8 @@ urlpatterns = [
   path('FollowU/<int:uid>',views.FollowU,name="FollowU"),
   path('StudentList/',views.StudentList,name="StudentList"),
   path('FollowRequest/',views.FollowRequest,name="FollowRequest"),
-  # path('MyRequest/',views.MyRequest,name="MyRequest"),
+  path('Followers/',views.Followers,name="Followers"),
+  path('ViewCollegeProfile/',views.ViewCollegeProfile,name="ViewCollegeProfile"),
+  path('acceptrequest/<int:aid>',views.acceptrequest,name="acceptrequest"),
+  path('rejectrequest/<int:rid>',views.rejectrequest,name="rejectrequest"),
 ]

@@ -1,33 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colleges</title>
 </head>
-<body>
-   <form action="" method="post">
-    <h1 align="center">Faculty</h1>
-    {% csrf_token %}
-    <table align="center" border="1">
-        <tr>
-            <td>Slno</td>
-            <td>Faculty</td>
-            <td>College</td>
-            <td>Department</td>
-            <td>Actions</td>
-        </tr>
 
-        {% for i in faculty %}
-        <tr>
-           <td>{{forloop.counter}}</td>
-            <td>{{i.faculty_name}}</td>
-            <td>{{i.college.college_name}}</td>
-             <td>{{i.department.department.department_name}}</td>
-            <td> <a href="{% url 'Student:FollowF' i.id %}">Follow</a></td>
-            {% endfor %}
-        </tr>
-    </table>
-   </form> 
+<body>
+    <form action="" method="post">
+        <h1 align="center">Faculty</h1>
+        {% csrf_token %}
+        <table align="center" border="1">
+            <tr>
+                <td>Slno</td>
+                <td>Faculty</td>
+                <td>College</td>
+                <td>Department</td>
+                <td>Actions</td>
+            </tr>
+
+            {% for i in faculty %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.faculty_name}}</td>
+                <td>{{i.college.college_name}}</td>
+                <td>{{i.department.department.department_name}}</td>
+               <td>
+                {% if i.id in followed_ids %}
+                    {% if i.id in pending_ids %}
+                        <span>Request Sent</span>
+                    {% else %}
+                        <span>Following</span>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'Student:FollowF' i.id %}">Follow</a>
+                {% endif %}
+                </td>
+
+
+                {% endfor %}
+            </tr>
+        </table>
+    </form>
 </body>
+
 </html>

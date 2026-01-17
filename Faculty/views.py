@@ -155,31 +155,131 @@ def Comment(request, cid):
         "comment": comments,
         "post": post
     })
-def Follow(request,cid):
-    faculty=tbl_faculty.objects.get(id=request.session["fid"])
-    collegeid=tbl_college.objects.get(id=cid)
-    tbl_follow.objects.create(fromfaculty=faculty,tocollege=collegeid)
-    return redirect("Faculty:ViewCollege")
-def FollowU(request,uid):
-    faculty=tbl_faculty.objects.get(id=request.session["fid"])
-    studentid=tbl_student.objects.get(id=uid)
-    tbl_follow.objects.create(fromfaculty=faculty,tostudent=studentid)
-    return redirect("Faculty:UserList")
+def Follow(request, cid):
+    faculty = tbl_faculty.objects.get(id=request.session["fid"])
+    college = tbl_college.objects.get(id=cid)
 
-def FollowF(request,Fid):
-    faculty=tbl_faculty.objects.get(id=request.session["fid"])
-    facultyid=tbl_faculty.objects.get(id=Fid)
-    tbl_follow.objects.create(fromfaculty=faculty,tofaculty=facultyid)
+    if not tbl_follow.objects.filter(fromfaculty=faculty,tocollege=college).exists():
+        tbl_follow.objects.create(
+            fromfaculty=faculty,
+            tocollege=college,
+            follow_status=1
+        )
+    return redirect("Faculty:ViewCollege")
+
+def FollowU(request, uid):
+    faculty = tbl_faculty.objects.get(id=request.session["fid"])
+    target = tbl_student.objects.get(id=uid)
+
+    status = 0 if target.student_accounttype == 1 else 1
+
+    if not tbl_follow.objects.filter(fromfaculty=faculty, tostudent=target).exists():
+        tbl_follow.objects.create(
+            fromfaculty=faculty,
+            tostudent=target,
+            follow_status=status
+        )
+    return redirect("Faculty:UserList")
+def FollowF(request, fid):
+    faculty = tbl_faculty.objects.get(id=request.session["fid"])
+    target = tbl_faculty.objects.get(id=fid)
+
+    status = 0 if target.faculty_accounttype == 1 else 1
+
+    if not tbl_follow.objects.filter(fromfaculty=faculty, tofaculty=target).exists():
+        tbl_follow.objects.create(
+            fromfaculty=faculty,
+            tofaculty=target,
+            follow_status=status
+        )
     return redirect("Faculty:ViewFaculty")
 def ViewFaculty(request):
-    faculty=tbl_faculty.objects.all()
-    return render(request,'Faculty/ViewFaculty.html',{'faculty':faculty})
+    faculty = tbl_faculty.objects.get(id=request.session['fid'])
+    facultys = tbl_faculty.objects.exclude(id=faculty.id)
+
+    followed_ids = tbl_follow.objects.filter(
+        fromfaculty=faculty,
+        tofaculty__isnull=False
+    ).values_list('tofaculty_id', flat=True)
+
+    pending_ids = tbl_follow.objects.filter(
+        fromfaculty=faculty,
+        tofaculty__isnull=False,
+        follow_status=0
+    ).values_list('tofaculty_id', flat=True)
+
+    return render(request,'Faculty/ViewFaculty.html',{
+        'facultys': facultys,
+        'followed_ids': followed_ids,
+        'pending_ids': pending_ids
+    })
+
 
 def ViewCollege(request):
-    college=tbl_college.objects.filter(college_status=1)
-    return render(request,'Faculty/ViewCollege.html',{'college':college})
+    faculty = tbl_faculty.objects.get(id=request.session['fid'])
+    college = tbl_college.objects.filter(college_status=1)
+
+    followed_ids = tbl_follow.objects.filter(
+        fromfaculty=faculty,
+        tocollege__isnull=False
+    ).values_list('tocollege_id', flat=True)
+
+    return render(request,'Faculty/ViewCollege.html',{
+        'college': college,
+        'followed_ids': followed_ids
+    })
+
 def UserList(request):
-    userdata=tbl_student.objects.all()
-    return render(request,'Faculty/UserList.html',{"users":userdata})
+    faculty = tbl_faculty.objects.get(id=request.session['fid'])
+    users = tbl_student.objects.all()
 
+    followed_ids = tbl_follow.objects.filter(
+        fromfaculty=faculty,
+        tostudent__isnull=False
+    ).values_list('tostudent_id', flat=True)
 
+    pending_ids = tbl_follow.objects.filter(
+        fromfaculty=faculty,
+        tostudent__isnull=False,
+        follow_status=0
+    ).values_list('tostudent_id', flat=True)
+
+    return render(request,'Faculty/UserList.html',{
+        'users': users,
+        'followed_ids': followed_ids,
+        'pending_ids': pending_ids
+    })
+def Followers(request):
+    faculty = tbl_faculty.objects.get(id=request.session["fid"])
+
+    following = tbl_follow.objects.filter(
+        fromfaculty=faculty
+    )
+
+    followers = tbl_follow.objects.filter(
+        tofaculty=faculty,
+        follow_status=1
+    )
+    requests = tbl_follow.objects.filter(
+        tofaculty=faculty,
+        follow_status=0
+    )
+
+    return render(
+        request,
+        "Faculty/Followers.html",
+        {
+            "following": following,
+            "followers": followers,
+            "requests": requests
+        }
+    )
+def acceptrequest(request,aid):
+    Follow=tbl_follow.objects.get(id=aid)
+    Follow.follow_status=1
+    Follow.save()
+    return redirect("Faculty:Followers")
+
+def rejectrequest(request,rid):
+    tbl_follow.objects.get(id=rid).delete()
+    return redirect("Faculty:Followers")
