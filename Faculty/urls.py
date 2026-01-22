@@ -27,4 +27,6 @@ urlpatterns = [
   path('Followers/',views.Followers,name="Followers"),
   path('acceptrequest/<int:aid>',views.acceptrequest,name="acceptrequest"),
   path('rejectrequest/<int:rid>',views.rejectrequest,name="rejectrequest"),
+  path('Complaint',views.Complaint,name="Complaint"),
+  path('deletecomplaint/<int:did>',views.deletecomplaint,name="deletecomplaint"),
 ]

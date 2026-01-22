@@ -1,8 +1,10 @@
 from django.shortcuts import render,redirect
 from Guest.models import *
 from College.models import *
+from Student.models import *
 from Faculty.models import *
 from django.db.models import Q
+from django.http import JsonResponse
 # Create your views here.
 def HomePage(request):
     Student = tbl_student.objects.get(id=request.session['sid'])
@@ -90,13 +92,35 @@ def delpost(request,did):
     tbl_post.objects.get(id=did).delete()
     return redirect("Student:Post")
 def ViewPost(request):
+    student = tbl_student.objects.get(id=request.session["sid"])
     post=tbl_post.objects.all()
-    return render(request,'Student/ViewPost.html',{'post':post})
-def likepost(request,pid):
-    student=tbl_student.objects.get(id=request.session["sid"])
-    postid=tbl_post.objects.get(id=pid)
-    tbl_like.objects.create(post=postid,student=student)
-    return redirect("Student:ViewPost")
+    liked_posts = tbl_like.objects.filter(student=student).values_list('post_id', flat=True)
+    return render(request,'Student/ViewPost.html',{'post':post,'liked_posts': liked_posts})
+# def likepost(request,pid):
+#     student=tbl_student.objects.get(id=request.session["sid"])
+#     postid=tbl_post.objects.get(id=pid)
+#     tbl_like.objects.create(post=postid,student=student)
+#     return redirect("Student:ViewPost")
+
+def likepost(request):
+    if request.method == "POST":
+        student = tbl_student.objects.get(id=request.session["sid"])
+        post_id = request.POST.get('post_id')
+        post = tbl_post.objects.get(id=post_id)
+
+        like_qs = tbl_like.objects.filter(post=post, student=student)
+        if like_qs.exists():
+            like_qs.delete() 
+            liked = False
+        else:
+            tbl_like.objects.create(post=post, student=student)  
+            liked = True
+
+        return JsonResponse({'liked': liked})
+
+    return JsonResponse({'error': 'Invalid request'})
+
+
 def Comment(request, cid):
     post = tbl_post.objects.get(id=cid)
     student = tbl_student.objects.get(id=request.session["sid"])
@@ -273,12 +297,41 @@ def rejectrequest(request,rid):
     tbl_follow.objects.get(id=rid).delete()
     return redirect("Student:Followers")
 
-def ViewCollegeProfile(request):
+def ViewCollegeProfile(request,pid):
+    
+    college=tbl_college.objects.get(id=pid)
+    
+    post=tbl_post.objects.filter(college=college)
+    return render(request,'Student/ViewCollegeProfile.html',{"college": college,"post":post})
+def ViewFacultyProfile(request,fid):
+    
+    faculty=tbl_faculty.objects.get(id=fid)
+    
+    post=tbl_post.objects.filter(faculty=faculty)
+    return render(request,'Student/ViewFacultyProfile.html',{"faculty": faculty,"post":post})
+def ViewStudentProfile(request,sid):
+    
+    student=tbl_student.objects.get(id=sid)
+    
+    post=tbl_post.objects.filter(student=student)
+    return render(request,'Student/ViewStudentProfile.html',{"student": student,"post":post})
+
+def Complaint(request):
     student=tbl_student.objects.get(id=request.session["sid"])
-    collegedata=tbl_follow.objects.filter(tostudent=student)
-    collegeid=tbl_follow.objects.get(fromstudent=student)
-    post=tbl_post.objects.filter(college_id=collegeid)
-    return render(request,'Student/ViewCollegeProfile.html',{"collegedata": collegedata,"post":post})
+    complaint=tbl_complaint.objects.filter(student_id=student)
+    if request.method == "POST":
+        
+        title=request.POST.get("txt_title")
+        content=request.POST.get("txt_content")
+        tbl_complaint.objects.create(complaint_title=title,complaint_content=content,student=student)
+        
+        return render(request,'Student/Complaint.html',{'complaint':complaint})
+    else:
+        return render(request,'Student/Complaint.html',{'complaint':complaint})
+def deletecomplaint(request,did):
+    tbl_complaint.objects.get(id=did).delete()
+    return redirect("Student:Complaint")
+
 
 
 

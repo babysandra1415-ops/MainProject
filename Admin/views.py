@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from Admin.models import *
 from Guest.models import *
 from College.models import *
+from Student.models import *
 
 # Create your views here.
 def AdminRegistration(request):
@@ -266,3 +267,25 @@ def AjaxCourse(request):
     departmentid = request.GET.get("did")
     course = tbl_course.objects.filter(department=departmentid)
     return render(request,"Admin/AjaxCourse.html",{'course':course})
+def ViewComplaint(request):
+    complaint=tbl_complaint.objects.all()
+    return render(request,"Admin/ViewComplaint.html",{'complaint':complaint})
+def Reply(request, rrid):
+    complaint = tbl_complaint.objects.get(id=rrid)
+
+    if request.method == "POST":
+        reply_text = request.POST.get("txt_reply")
+
+        complaint.complaint_reply = reply_text
+        complaint.complaint_status = 1   
+        complaint.save()
+
+        return redirect("Admin:ViewComplaint")
+
+    return render(request, "Admin/Reply.html", {
+        "complaint": complaint
+    })
+
+
+
+

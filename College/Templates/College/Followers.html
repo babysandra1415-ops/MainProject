@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Connections</title>
+</head>
+<body>
+
+<h2 align="center">Connections</h2>
+
+<h3 align="center">Follow Requests</h3>
+
+<table align="center" border="1" cellpadding="8" >
+    <tr>
+        <th>Sl No</th>
+        <th>User</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for i in requests %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>
+            {% if i.fromstudent %}
+                {{ i.fromstudent.student_username }}
+            {% elif i.fromfaculty %}
+                {{ i.fromfaculty.faculty_username }}
+            {% elif i.fromcollege %}
+                {{ i.fromcollege.college_name }}
+            {% endif %}
+        </td>
+        <td>{% if i.fromstudent %} <img src="{{i.fromstudent.student_photo.url}}" width="100"
+                        height="100" />
+                    {% elif i.fromfaculty %}
+                    <img src="{{i.fromfaculty.faculty_photo.url}}" width="100" height="100" />
+                    {% elif i.fromcollege %}
+                    <img src="{{i.fromcollege.college_photo.url}}" width="100" height="100" />
+                    {% endif %}</td>
+        <td>
+            <a href="{% url 'College:acceptrequest' i.id %}">Accept</a> |
+            <a href="{% url 'College:rejectrequest' i.id %}">Reject</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3" align="center">No follow requests</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br><hr><br>
+
+<h3 align="center">Followers</h3>
+
+<table align="center" border="1" cellpadding="8" >
+    <tr>
+        <th>Sl No</th>
+        <th>User</th>
+        <th>Photo</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for i in followers %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>
+            {% if i.fromstudent %}
+                {{ i.fromstudent.student_username }}
+            {% elif i.fromfaculty %}
+                {{ i.fromfaculty.faculty_username }}
+            {% elif i.fromcollege %}
+                {{ i.fromcollege.college_name }}
+            {% endif %}
+        </td>
+        <td>{% if i.fromstudent %} <img src="{{i.fromstudent.student_photo.url}}" width="100"
+                        height="100" />
+                    {% elif i.fromfaculty %}
+                    <img src="{{i.fromfaculty.faculty_photo.url}}" width="100" height="100" />
+                    {% elif i.fromcollege %}
+                    <img src="{{i.fromcollege.college_photo.url}}" width="100" height="100" />
+                    {% endif %}</td>
+                    <td> <a href="{% url 'College:rejectrequest' i.id %}">RemoveFollower</a></td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" align="center">No followers</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br><hr><br>
+
+<h3 align="center">Following</h3>
+
+<table align="center" border="1" cellpadding="8" >
+    <tr>
+        <th>Sl No</th>
+        <th>User</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for i in following %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>
+            {% if i.tostudent %}
+                {{ i.tostudent.student_username }}
+            {% elif i.tofaculty %}
+                {{ i.tofaculty.faculty_username }}
+            {% elif i.tocollege %}
+                {{ i.tocollege.college_name }}
+            {% endif %}
+        </td>
+        <td> {% if i.tostudent %} <img src="{{i.tostudent.student_photo.url}}" width="100"height="100" />
+                    {% elif i.tofaculty %}
+                    <img src="{{i.tofaculty.faculty_photo.url}}" width="100" height="100" />
+                    {% elif i.tocollege %}
+                    <img src="{{i.tocollege.college_photo.url}}" width="100" height="100" />
+                    {% endif %}</td>
+        <td>
+            {% if i.follow_status == 0 %}
+                Requested
+            {% else %}
+                Following
+            {% endif %}
+        </td>
+     
+        <td>
+            {% if i.follow_status == 1 %}
+               
+            
+               <a href="{% url 'College:rejectrequest' i.id %}">Unfollow</a>
+            {% else %}
+            requested
+               
+            {% endif %}
+            
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="4" align="center">Not following anyone</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint</title>
+</head>
+<body>
+
+    <form action="" method="post">
+        <h1 align="center">Complaint</h1>
+        {% csrf_token %}
+        <table align="center" border="1">
+            <tr>
+                <td>Title</td>
+                <td><input type="text" name="txt_title" id="txt_title" placeholder="Enter Complaint tiltle" required></td>
+            </tr>
+            <tr>
+                <td>Content</td>
+                <td><textarea name="txt_content" placeholder="Description" required></textarea></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+                
+            </tr>
+        </table>
+<table align="center" border="1"><tr>
+    <td>SlNo</td>
+    <td>Title</td>
+    <td>Content</td>
+    <td>Date</td>
+    <td>Reply</td>
+    <td>Action</td>
+</tr>
+{% for i in complaint %}
+<tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{i.complaint_title}}</td>
+    <td>{{i.complaint_content}}</td>
+    <td>{{i.complaint_date}}</td>
+    <td>{{i.complaint_reply}}</td>
+    <td><a href="{%url 'Student:deletecomplaint' i.id%}">delete</a> </td>
+</tr>
+{% endfor %}
+</table>
+    </form>
+    
+</body>
+</html>

@@ -13,6 +13,7 @@
         <tr>
             <td>Slno</td>
             <td>College</td>
+            <td>Photo</td>
             <td>Actions</td>
         </tr>
 
@@ -20,6 +21,8 @@
         <tr>
            <td>{{forloop.counter}}</td>
             <td>{{i.college_name}}</td>
+            <td><img src="{{i.college_photo.url}}" width="100" height="100" alt="user" />
+</td>
             <td> {% if i.id in followed_ids %}
                     <span>Followed</span>
                     {% else %}

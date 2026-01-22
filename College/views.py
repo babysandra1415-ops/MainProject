@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from Guest.models import *
 from Admin.models import *
 from College.models import *
+from Student.models import *
 from Faculty.models import *
 
 
@@ -198,27 +199,143 @@ def Comment(request, cid):
         "comment": comments,
         "post": post
     })
-def FollowF(request,fid):
-    college=tbl_college.objects.get(id=request.session["cid"])
-    facultyid=tbl_faculty.objects.get(id=fid)
-    tbl_follow.objects.create(fromcollege=college,tofaculty=facultyid)
+def FollowF(request, fid):
+    college = tbl_college.objects.get(id=request.session["cid"])
+    target = tbl_faculty.objects.get(id=fid)
+
+    status = 0 if target.faculty_accounttype == 1 else 1
+
+    if not tbl_follow.objects.filter(fromcollege=college, tofaculty=target).exists():
+        tbl_follow.objects.create(
+            fromcollege=college,
+            tofaculty=target,
+            follow_status=status
+        )
     return redirect("College:FacultyList")
-def FollowC(request,Cid):
-    college=tbl_college.objects.get(id=request.session["cid"])
-    collegeid=tbl_college.objects.get(id=Cid)
-    tbl_follow.objects.create(fromcollege=college,tocollege=collegeid)
+def FollowC(request, Cid):
+    college = tbl_college.objects.get(id=request.session["cid"])
+    colleges = tbl_college.objects.get(id=Cid)
+
+    if not tbl_follow.objects.filter(fromcollege=college,tocollege=colleges).exists():
+        tbl_follow.objects.create(
+            fromcollege=college,
+            tocollege=colleges,
+            follow_status=1
+        )
     return redirect("College:CollegeList")
-def FollowS(request,Sid):
-    college=tbl_college.objects.get(id=request.session["cid"])
-    studentid=tbl_student.objects.get(id=Sid)
-    tbl_follow.objects.create(fromcollege=college,tostudent=studentid)
+def FollowS(request, Sid):
+    college = tbl_college.objects.get(id=request.session["cid"])
+    target = tbl_student.objects.get(id=Sid)
+
+    status = 0 if target.student_accounttype == 1 else 1
+
+    if not tbl_follow.objects.filter(fromcollege=college, tostudent=target).exists():
+        tbl_follow.objects.create(
+            fromcollege=college,
+            tostudent=target,
+            follow_status=status
+        )
     return redirect("College:StudentList")
 def FacultyList(request):
-    faculty=tbl_faculty.objects.all()
-    return render(request,'College/FacultyList.html',{'faculty':faculty})
+    college = tbl_college.objects.get(id=request.session['cid'])
+    faculty = tbl_faculty.objects.all()
+
+    followed_ids = tbl_follow.objects.filter(
+        fromcollege=college,
+        tofaculty__isnull=False
+    ).values_list('tofaculty_id', flat=True)
+
+    pending_ids = tbl_follow.objects.filter(
+        fromcollege=college,
+        tofaculty__isnull=False,
+        follow_status=0
+    ).values_list('tofaculty_id', flat=True)
+
+    return render(request,'College/FacultyList.html',{
+        'faculty': faculty,
+        'followed_ids': followed_ids,
+        'pending_ids': pending_ids
+    })
 def CollegeList(request):
-    college=tbl_college.objects.all()
-    return render(request,'College/CollegeList.html',{'college':college})
+    college = tbl_college.objects.get(id=request.session['cid'])
+    colleges = tbl_college.objects.exclude(id=college.id)
+
+    followed_ids = tbl_follow.objects.filter(
+        fromcollege=college,
+        tocollege__isnull=False
+    ).values_list('tocollege_id', flat=True)
+
+    return render(request,'College/CollegeList.html',{
+        'colleges': colleges,
+        'followed_ids': followed_ids
+        
+    })
 def StudentList(request):
-    student=tbl_student.objects.all()
-    return render(request,'College/StudentList.html',{'users':student})
+    college = tbl_college.objects.get(id=request.session['cid'])
+    users = tbl_student.objects.all()
+
+    followed_ids = tbl_follow.objects.filter(
+        fromcollege=college,
+        tostudent__isnull=False
+    ).values_list('tostudent_id', flat=True)
+
+    pending_ids = tbl_follow.objects.filter(
+        fromcollege=college,
+        tostudent__isnull=False,
+        follow_status=0
+    ).values_list('tostudent_id', flat=True)
+
+    return render(request,'College/StudentList.html',{
+        'users': users,
+        'followed_ids': followed_ids,
+        'pending_ids': pending_ids
+    })
+def Followers(request):
+    college = tbl_college.objects.get(id=request.session["cid"])
+
+    following = tbl_follow.objects.filter(
+        fromcollege=college
+    )
+
+    followers = tbl_follow.objects.filter(
+        tocollege=college,
+        follow_status=1
+    )
+    requests = tbl_follow.objects.filter(
+        tocollege=college,
+        follow_status=0
+    )
+
+    return render(
+        request,
+        "College/Followers.html",
+        {
+            "following": following,
+            "followers": followers,
+            "requests": requests
+        }
+    )
+def acceptrequest(request,aid):
+    Follow=tbl_follow.objects.get(id=aid)
+    Follow.follow_status=1
+    Follow.save()
+    return redirect("College:Followers")
+
+def rejectrequest(request,rid):
+    tbl_follow.objects.get(id=rid).delete()
+    return redirect("College:Followers")
+def Complaint(request):
+    college=tbl_college.objects.get(id=request.session["cid"])
+    complaint=tbl_complaint.objects.filter(college_id=college)
+    if request.method == "POST":
+        
+        title=request.POST.get("txt_title")
+        content=request.POST.get("txt_content")
+        tbl_complaint.objects.create(complaint_title=title,complaint_content=content,college=college)
+        
+        return render(request,'College/Complaint.html',{'complaint':complaint})
+    else:
+        return render(request,'College/Complaint.html',{'complaint':complaint})
+def deletecomplaint(request,did):
+    tbl_complaint.objects.get(id=did).delete()
+    return redirect("College:Complaint")

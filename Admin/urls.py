@@ -39,4 +39,6 @@ urlpatterns = [
   path('delsubject/<int:did>',views.delsubject,name="delsubject"),
   path('editsubject/<int:eid>',views.editsubject,name="editsubject"),
   path('AjaxCourse/',views.AjaxCourse,name="AjaxCourse"),
+  path('ViewComplaint/',views.ViewComplaint,name="ViewComplaint"),
+  path('Reply/<int:rrid>',views.Reply,name="Reply"),
 ]

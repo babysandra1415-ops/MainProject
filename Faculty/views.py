@@ -3,6 +3,7 @@ from College.models import *
 from Admin.models import *
 from Guest.models import *
 from Faculty.models import *
+from Student.models import *
 
 # Create your views here.
 def HomePage(request):
@@ -283,3 +284,18 @@ def acceptrequest(request,aid):
 def rejectrequest(request,rid):
     tbl_follow.objects.get(id=rid).delete()
     return redirect("Faculty:Followers")
+def Complaint(request):
+    faculty=tbl_faculty.objects.get(id=request.session["fid"])
+    complaint=tbl_complaint.objects.filter(faculty_id=faculty)
+    if request.method == "POST":
+        
+        title=request.POST.get("txt_title")
+        content=request.POST.get("txt_content")
+        tbl_complaint.objects.create(complaint_title=title,complaint_content=content,faculty=faculty)
+        
+        return render(request,'Faculty/Complaint.html',{'complaint':complaint})
+    else:
+        return render(request,'Faculty/Complaint.html',{'complaint':complaint})
+def deletecomplaint(request,did):
+    tbl_complaint.objects.get(id=did).delete()
+    return redirect("Faculty:Complaint")

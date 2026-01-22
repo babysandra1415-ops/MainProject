@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViewComplaint</title>
+</head>
+<body>
+   <form action="" method="post">
+    <h1 align="center">ViewComplaint</h1>
+    <table align="center" border="1"><tr>
+    <td>SlNo</td>
+    <td>Title</td>
+    <td>Content</td>
+    <td>Date</td>
+    <td>UserName</td>
+    <td>Reply</td>
+</tr>
+{% for i in complaint %}
+<tr>
+    <td>{{forloop.counter}}</td>
+    <td>{{i.complaint_title}}</td>
+    <td>{{i.complaint_content}}</td>
+    <td>{{i.complaint_date}}</td>
+    <td> {% if i.student %}
+                {{ i.student.student_username }}
+            {% elif i.faculty %}
+                {{ i.faculty.faculty_username }}
+            {% elif i.college %}
+                {{ i.college.college_name }}
+            {% endif %}</td>
+    <td>{% if i.complaint_status == 0 %}<a href="{% url 'Admin:Reply' i.id %}">Reply</a> {% else %} {{ i.complaint_reply }} {% endif %}</td>
+</tr>
+{% endfor %}
+</table>
+   </form> 
+</body>
+</html>
