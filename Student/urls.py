@@ -31,4 +31,19 @@ urlpatterns = [
   path('deletecomplaint/<int:did>',views.deletecomplaint,name="deletecomplaint"),
   path('ViewFacultyProfile/<int:fid>',views.ViewFacultyProfile,name="ViewFacultyProfile"),
   path('ViewStudentProfile/<int:sid>',views.ViewStudentProfile,name="ViewStudentProfile"),
+  path('chatpage/<int:id>',views.chatpage,name="chatpage"),
+  path('ajaxchat/',views.ajaxchat,name="ajaxchat"),
+  path('ajaxchatview/',views.ajaxchatview,name="ajaxchatview"),
+  path('clearchat/',views.clearchat,name="clearchat"),
+
+  path('fchatpage/<int:id>',views.fchatpage,name="fchatpage"),
+  path('fajaxchat/',views.fajaxchat,name="fajaxchat"),
+  path('fajaxchatview/',views.fajaxchatview,name="fajaxchatview"),
+  path('fclearchat/',views.fclearchat,name="fclearchat"),
+  
+  path('cchatpage/<int:id>',views.cchatpage,name="cchatpage"),
+  path('cajaxchat/',views.cajaxchat,name="cajaxchat"),
+  path('cajaxchatview/',views.cajaxchatview,name="cajaxchatview"),
+  path('cclearchat/',views.cclearchat,name="cclearchat"),
+  path('Search/',views.Search,name="Search"),
 ]

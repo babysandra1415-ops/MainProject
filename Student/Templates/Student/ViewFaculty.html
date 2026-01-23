@@ -30,6 +30,7 @@
                 <td>{{i.college.college_name}}</td>
                 <td>{{i.department.department.department_name}}</td>
                <td>
+                <a href="{% url 'Student:ViewFacultyProfile' i.id %}">View Profile</a>|
                 {% if i.id in followed_ids %}
                     {% if i.id in pending_ids %}
                         <span>Request Sent</span>
@@ -37,8 +38,8 @@
                         <span>Following</span>
                     {% endif %}
                 {% else %}
-                    <a href="{% url 'Student:FollowF' i.id %}">Follow</a>|
-                 <a href="{% url 'Student:ViewFaculty' i.id %}">View Profile</a>
+                    <a href="{% url 'Student:FollowF' i.id %}">Follow</a>
+                 
                 {% endif %}
                 </td>
 

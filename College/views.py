@@ -4,6 +4,9 @@ from Admin.models import *
 from College.models import *
 from Student.models import *
 from Faculty.models import *
+from django.db.models import Q
+from django.http import JsonResponse
+from datetime import datetime
 
 
 # Create your views here.
@@ -156,11 +159,29 @@ def delpost(request,did):
 def ViewPost(request):
     post=tbl_post.objects.all()
     return render(request,'College/ViewPost.html',{'post':post})
-def likepost(request,pid):
-    college=tbl_college.objects.get(id=request.session["cid"])
-    postid=tbl_post.objects.get(id=pid)
-    tbl_like.objects.create(post=postid,college=college)
-    return redirect("College:ViewPost")
+# def likepost(request,pid):
+#     college=tbl_college.objects.get(id=request.session["cid"])
+#     postid=tbl_post.objects.get(id=pid)
+#     tbl_like.objects.create(post=postid,college=college)
+#     return redirect("College:ViewPost")
+
+def likepost(request):
+    if request.method == "POST":
+        college = tbl_college.objects.get(id=request.session["cid"])
+        post_id = request.POST.get('post_id')
+        post = tbl_post.objects.get(id=post_id)
+
+        like_qs = tbl_like.objects.filter(post=post, college=college)
+        if like_qs.exists():
+            like_qs.delete() 
+            liked = False
+        else:
+            tbl_like.objects.create(post=post, college=college)  
+            liked = True
+
+        return JsonResponse({'liked': liked})
+
+    return JsonResponse({'error': 'Invalid request'})
 def Comment(request, cid):
     post = tbl_post.objects.get(id=cid)
     college = tbl_college.objects.get(id=request.session["cid"])
@@ -339,3 +360,80 @@ def Complaint(request):
 def deletecomplaint(request,did):
     tbl_complaint.objects.get(id=did).delete()
     return redirect("College:Complaint")
+def ViewCollegeProfile(request,pid):
+    
+    college=tbl_college.objects.get(id=pid)
+    
+    post=tbl_post.objects.filter(college=college)
+    return render(request,'College/ViewCollegeProfile.html',{"college": college,"post":post})
+def ViewFacultyProfile(request,fid):
+    
+    faculty=tbl_faculty.objects.get(id=fid)
+    
+    post=tbl_post.objects.filter(faculty=faculty)
+    return render(request,'College/ViewFacultyProfile.html',{"faculty": faculty,"post":post})
+def ViewStudentProfile(request,sid):
+    
+    student=tbl_student.objects.get(id=sid)
+    
+    post=tbl_post.objects.filter(student=student)
+    return render(request,'College/ViewStudentProfile.html',{"student": student,"post":post})
+def chatpage(request,id):
+    college  = tbl_college.objects.get(id=id)
+    return render(request,"College/Chat.html",{"college":college})
+
+def ajaxchat(request):
+    from_college = tbl_college.objects.get(id=request.session["cid"])
+    to_college = tbl_college.objects.get(id=request.POST.get("tid"))
+    tbl_chat.objects.create(chat_content=request.POST.get("msg"),chat_time=datetime.now(),college_from=from_college,college_to=to_college,chat_file=request.FILES.get("file"))
+    return render(request,"College/Chat.html")
+
+
+def ajaxchatview(request):
+    tid = request.GET.get("tid")
+    user = tbl_college.objects.get(id=request.session["cid"])
+    chat_data = tbl_chat.objects.filter((Q(college_from=user) | Q(college_to=user)) & (Q(college_from=tid) | Q(college_to=tid))).order_by('chat_time')
+    return render(request,"College/ChatView.html",{"data":chat_data,"tid":int(tid)})
+
+def clearchat(request):
+    tbl_chat.objects.filter(Q(college_from=request.session["cid"]) & Q(college_to=request.GET.get("tid")) | (Q(college_from=request.GET.get("tid")) & Q(college_to=request.session["cid"]))).delete()
+    return render(request,"College/ClearChat.html",{"msg":"Chat Deleted Sucessfully...."})
+
+def schatpage(request,id):
+    student  = tbl_student.objects.get(id=id)
+    return render(request,"College/SChat.html",{"student":student})
+
+def sajaxchat(request):
+    from_college = tbl_college.objects.get(id=request.session["cid"])
+    to_student = tbl_student.objects.get(id=request.POST.get("tid"))
+    tbl_chat.objects.create(chat_content=request.POST.get("msg"),chat_time=datetime.now(),college_from=from_college,student_to=to_student,chat_file=request.FILES.get("file"))
+    return render(request,"College/SChat.html")
+
+def sajaxchatview(request):
+    tid = request.GET.get("tid")
+    user = tbl_college.objects.get(id=request.session["cid"])
+    chat_data = tbl_chat.objects.filter((Q(college_from=user) | Q(college_to=user)) & (Q(student_from=tid) | Q(student_to=tid))).order_by('chat_time')
+    return render(request,"College/SChatView.html",{"data":chat_data,"tid":int(tid)})
+
+def sclearchat(request):
+    tbl_chat.objects.filter(Q(college_from=request.session["cid"]) & Q(student_to=request.GET.get("tid")) | (Q(student_from=request.GET.get("tid")) & Q(college_to=request.session["cid"]))).delete()
+    return render(request,"College/ClearChat.html",{"msg":"Chat Deleted Sucessfully...."})
+def fchatpage(request,id):
+    faculty  = tbl_faculty.objects.get(id=id)
+    return render(request,"College/FChat.html",{"faculty":faculty})
+
+def fajaxchat(request):
+    from_college = tbl_college.objects.get(id=request.session["cid"])
+    to_faculty = tbl_faculty.objects.get(id=request.POST.get("tid"))
+    tbl_chat.objects.create(chat_content=request.POST.get("msg"),chat_time=datetime.now(),college_from=from_college,faculty_to=to_faculty,chat_file=request.FILES.get("file"))
+    return render(request,"College/FChat.html")
+
+def fajaxchatview(request):
+    tid = request.GET.get("tid")
+    user = tbl_college.objects.get(id=request.session["cid"])
+    chat_data = tbl_chat.objects.filter((Q(college_from=user) | Q(college_to=user)) & (Q(faculty_from=tid) | Q(faculty_to=tid))).order_by('chat_time')
+    return render(request,"College/FChatView.html",{"data":chat_data,"tid":int(tid)})
+
+def fclearchat(request):
+    tbl_chat.objects.filter(Q(college_from=request.session["cid"]) & Q(faculty_to=request.GET.get("tid")) | (Q(faculty_from=request.GET.get("tid")) & Q(college_to=request.session["cid"]))).delete()
+    return render(request,"College/FClearChat.html",{"msg":"Chat Deleted Sucessfully...."})

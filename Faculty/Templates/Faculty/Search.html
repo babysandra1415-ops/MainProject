@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+
+<body>
+
+<h1 align="center">Search</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <table align="center">
+        <tr>
+            <td>Search</td>
+            <td>Filter</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><input type="text" name="txt_search"></td>
+            <td>
+                <select name="sel_user">
+                    <option value="">--Select--</option>
+                    <option value="Student">Student</option>
+                    <option value="College">College</option>
+                    <option value="Faculty">Faculty</option>
+                </select>
+            </td>
+            <td colspan="2" align="center"><input type="submit" value="Submit"> 
+                <input type="reset" value="Reset" onclick="reload()">
+            </td>
+        </tr>
+    </table>
+</form>
+
+<br>
+
+<table align="center" border="1" cellpadding="8">
+    <tr>
+        <th>SlNo</th>
+        <th>Photo</th>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Action</th>
+       
+    </tr>
+
+    <!-- STUDENTS -->
+    {% for s in student %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td><img src="{{ s.student_photo.url }}" width="60"></td>
+        <td>{{ s.student_name }}</td>
+        <td>{{ s.student_username }}</td>
+        
+        <td><a href="{% url 'Faculty:ViewStudentProfile' s.id %}">View Profile</a>|<a href="{% url 'Faculty:FollowU' s.id %}">Follow</a>
+        </td>
+        
+    </tr>
+    {% endfor %}
+
+    <!-- COLLEGES -->
+    {% for c in college %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td><img src="{{ c.college_logo.url }}" width="60"></td>
+        <td>{{ c.college_name }}</td>
+        <td>{{ c.college_email }}</td>
+        <td><a href="{% url 'Faculty:ViewStudentProfile' c.id %}">View Profile</a>|<a href="{% url 'Faculty:Follow' c.id %}">Follow</a></td>
+        
+    </tr>
+    {% endfor %}
+
+    <!-- FACULTY -->
+    {% for f in faculty %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td><img src="{{ f.faculty_photo.url }}" width="60"></td>
+        <td>{{ f.faculty_name }}</td>
+        <td>{{ f.faculty_username }}</td>
+        <td><a href="{% url 'Faculty:ViewFacultyProfile' f.id %}">View Profile</a>|<a href="{% url 'Faculty:FollowF' f.id %}">Follow</a></td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<script>
+    function reload()
+    {
+        window.location="{% url 'Faculty:Search' %}"
+    }
+</script>
+</body>
+</html>

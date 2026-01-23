@@ -4,6 +4,9 @@ from Admin.models import *
 from Guest.models import *
 from Faculty.models import *
 from Student.models import *
+from django.db.models import Q
+from django.http import JsonResponse
+from datetime import datetime
 
 # Create your views here.
 def HomePage(request):
@@ -111,11 +114,29 @@ def delpost(request,did):
 def ViewPost(request):
     post=tbl_post.objects.all()
     return render(request,'Faculty/ViewPost.html',{'post':post})
-def likepost(request,pid):
-    faculty=tbl_faculty.objects.get(id=request.session["fid"])
-    postid=tbl_post.objects.get(id=pid)
-    tbl_like.objects.create(post=postid,faculty=faculty)
-    return redirect("Faculty:ViewPost")
+# def likepost(request,pid):
+#     faculty=tbl_faculty.objects.get(id=request.session["fid"])
+#     postid=tbl_post.objects.get(id=pid)
+#     tbl_like.objects.create(post=postid,faculty=faculty)
+#     return redirect("Faculty:ViewPost")
+def likepost(request):
+    if request.method == "POST":
+        faculty = tbl_faculty.objects.get(id=request.session["fid"])
+        post_id = request.POST.get('post_id')
+        post = tbl_post.objects.get(id=post_id)
+
+        like_qs = tbl_like.objects.filter(post=post, faculty=faculty)
+        if like_qs.exists():
+            like_qs.delete() 
+            liked = False
+        else:
+            tbl_like.objects.create(post=post, faculty=faculty)  
+            liked = True
+
+        return JsonResponse({'liked': liked})
+
+    return JsonResponse({'error': 'Invalid request'})
+
 
 
 def Comment(request, cid):
@@ -299,3 +320,128 @@ def Complaint(request):
 def deletecomplaint(request,did):
     tbl_complaint.objects.get(id=did).delete()
     return redirect("Faculty:Complaint")
+
+def chatpage(request,id):
+    faculty  = tbl_faculty.objects.get(id=id)
+    return render(request,"Faculty/Chat.html",{"faculty":faculty})
+
+def ajaxchat(request):
+    from_faculty = tbl_faculty.objects.get(id=request.session["fid"])
+    to_faculty = tbl_faculty.objects.get(id=request.POST.get("tid"))
+    tbl_chat.objects.create(chat_content=request.POST.get("msg"),chat_time=datetime.now(),faculty_from=from_faculty,faculty_to=to_faculty,chat_file=request.FILES.get("file"))
+    return render(request,"Faculty/Chat.html")
+
+def ajaxchatview(request):
+    tid = request.GET.get("tid")
+    user = tbl_faculty.objects.get(id=request.session["fid"])
+    chat_data = tbl_chat.objects.filter((Q(faculty_from=user) | Q(faculty_to=user)) & (Q(faculty_from=tid) | Q(faculty_to=tid))).order_by('chat_time')
+    return render(request,"Faculty/ChatView.html",{"data":chat_data,"tid":int(tid)})
+
+def clearchat(request):
+    tbl_chat.objects.filter(Q(faculty_from=request.session["fid"]) & Q(faculty_to=request.GET.get("tid")) | (Q(faculty_from=request.GET.get("tid")) & Q(faculty_to=request.session["sid"]))).delete()
+    return render(request,"Faculty/ClearChat.html",{"msg":"Chat Deleted Sucessfully...."})
+
+def schatpage(request,id):
+    student  = tbl_student.objects.get(id=id)
+    return render(request,"Faculty/SChat.html",{"student":student})
+
+def sajaxchat(request):
+    from_faculty = tbl_faculty.objects.get(id=request.session["fid"])
+    to_student = tbl_student.objects.get(id=request.POST.get("tid"))
+    tbl_chat.objects.create(chat_content=request.POST.get("msg"),chat_time=datetime.now(),faculty_from=from_faculty,student_to=to_student,chat_file=request.FILES.get("file"))
+    return render(request,"Faculty/SChat.html")
+
+def sajaxchatview(request):
+    tid = request.GET.get("tid")
+    user = tbl_faculty.objects.get(id=request.session["fid"])
+    chat_data = tbl_chat.objects.filter((Q(faculty_from=user) | Q(faculty_to=user)) & (Q(student_from=tid) | Q(student_to=tid))).order_by('chat_time')
+    return render(request,"Faculty/SChatView.html",{"data":chat_data,"tid":int(tid)})
+
+def sclearchat(request):
+    tbl_chat.objects.filter(Q(faculty_from=request.session["fid"]) & Q(student_to=request.GET.get("tid")) | (Q(student_from=request.GET.get("tid")) & Q(faculty_to=request.session["fid"]))).delete()
+    return render(request,"Faculty/ClearChat.html",{"msg":"Chat Deleted Sucessfully...."})
+
+def cchatpage(request,id):
+    college  = tbl_college.objects.get(id=id)
+    return render(request,"Faculty/CChat.html",{"college":college})
+
+def cajaxchat(request):
+    from_faculty = tbl_faculty.objects.get(id=request.session["fid"])
+    to_college = tbl_college.objects.get(id=request.POST.get("tid"))
+    tbl_chat.objects.create(chat_content=request.POST.get("msg"),chat_time=datetime.now(),faculty_from=from_faculty,college_to=to_college,chat_file=request.FILES.get("file"))
+    return render(request,"Faculty/CChat.html")
+
+def cajaxchatview(request):
+    tid = request.GET.get("tid")
+    user = tbl_faculty.objects.get(id=request.session["fid"])
+    chat_data = tbl_chat.objects.filter((Q(faculty_from=user) | Q(faculty_to=user)) & (Q(college_from=tid) | Q(college_to=tid))).order_by('chat_time')
+    return render(request,"Faculty/CChatView.html",{"data":chat_data,"tid":int(tid)})
+
+def cclearchat(request):
+    tbl_chat.objects.filter(Q(faculty_from=request.session["fid"]) & Q(college_to=request.GET.get("tid")) | (Q(college_from=request.GET.get("tid")) & Q(faculty_to=request.session["fid"]))).delete()
+    return render(request,"Faculty/ClearChat.html",{"msg":"Chat Deleted Sucessfully...."})
+
+
+def ViewCollegeProfile(request,pid):
+    
+    college=tbl_college.objects.get(id=pid)
+    
+    post=tbl_post.objects.filter(college=college)
+    return render(request,'Faculty/ViewCollegeProfile.html',{"college": college,"post":post})
+def ViewFacultyProfile(request,fid):
+    
+    faculty=tbl_faculty.objects.get(id=fid)
+    
+    post=tbl_post.objects.filter(faculty=faculty)
+    return render(request,'Faculty/ViewFacultyProfile.html',{"faculty": faculty,"post":post})
+def ViewStudentProfile(request,sid):
+    
+    student=tbl_student.objects.get(id=sid)
+    
+    post=tbl_post.objects.filter(student=student)
+    return render(request,'Faculty/ViewStudentProfile.html',{"student": student,"post":post})
+
+def Search(request):
+    # student=tbl_student.objects.all().exclude(id=request.session['sid'])
+    # faculty= tbl_faculty.objects.all()
+    # college = tbl_college.objects.all()
+    if request.method == "POST":
+        student=tbl_student.objects.all()
+        faculty= tbl_faculty.objects.all().exclude(id=request.session['fid'])
+        college = tbl_college.objects.all()
+        search = request.POST.get("txt_search")
+        usertype = request.POST.get("sel_user")
+       
+        # If search text exists
+        if search:
+            student = student.filter(
+                Q(student_name__icontains=search) |
+                Q(student_username__icontains=search)
+            )
+
+            faculty = faculty.filter(
+                Q(faculty_name__icontains=search) |
+                Q(faculty_username__icontains=search)
+            )
+
+            college = college.filter(
+                Q(college_name__icontains=search) |
+                Q(college_email__icontains=search)
+            )
+
+        # If filter selected
+        if usertype == "Student":
+            faculty = tbl_faculty.objects.none()
+            college = tbl_college.objects.none()
+
+        elif usertype == "Faculty":
+            student = tbl_student.objects.none()
+            college = tbl_college.objects.none()
+
+        elif usertype == "College":
+            student = tbl_student.objects.none()
+            faculty = tbl_faculty.objects.none()
+        return render(request,"Student/Search.html",{'student':student,'college':college,'faculty':faculty})
+    else:
+        return render(request,"Student/Search.html")
+

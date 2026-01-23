@@ -168,12 +168,19 @@
         <td>
             {% if i.follow_status == 1 %}
                 <a href="{% url 'Student:rejectrequest' i.id %}">Unfollow</a>|
+                 {% if i.tocollege %}
+                 <a href="{% url 'Student:cchatpage' i.tocollege.id %}">Chat</a>|
+                {% elif i.tofaculty %} 
+                <a href="{% url 'Student:fchatpage' i.tofaculty.id %}">Chat</a>|
+                {% elif i.tostudent %}
+                <a href="{% url 'Student:chatpage' i.tostudent.id %}">Chat</a>|
+            {% endif %}
             {% endif %}
 
             {% if i.tocollege %}
                  <a href="{% url 'Student:ViewCollegeProfile' i.tocollege.id %}">View Profile</a>
-                {% elif i.tofaculty %}
-                 <a href="{% url 'Student:ViewFacultyProfile' i.tofaculty.id %}">View Profile</a>
+                {% elif i.tofaculty %} 
+                 <a href="{% url 'Student:ViewFacultyProfile' i.tofaculty.id %}">View Profile</a> 
                 {% elif i.tostudent %}
                 <a href="{% url 'Student:ViewStudentProfile' i.tostudent.id %}">View Profile</a>
             {% endif %}

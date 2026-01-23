@@ -16,7 +16,7 @@ urlpatterns = [
   path('Post/',views.Post,name="Post"), 
   path('delpost/<int:did>',views.delpost,name="delpost"),
   path('ViewPost/',views.ViewPost,name="ViewPost"), 
-  path('likepost/<int:pid>',views.likepost,name="likepost"), 
+  path('likepost/',views.likepost,name="likepost"), 
   path('Comment/<int:cid>',views.Comment,name="Comment"),
   path('Follow/<int:cid>',views.Follow,name="Follow"),
   path('FollowU/<int:uid>',views.FollowU,name="FollowU"),
@@ -29,4 +29,22 @@ urlpatterns = [
   path('rejectrequest/<int:rid>',views.rejectrequest,name="rejectrequest"),
   path('Complaint',views.Complaint,name="Complaint"),
   path('deletecomplaint/<int:did>',views.deletecomplaint,name="deletecomplaint"),
-]
+  path('chatpage/<int:id>',views.chatpage,name="chatpage"),
+  path('ajaxchat/',views.ajaxchat,name="ajaxchat"),
+  path('ajaxchatview/',views.ajaxchatview,name="ajaxchatview"),
+  path('clearchat/',views.clearchat,name="clearchat"),
+  path('schatpage/<int:id>',views.schatpage,name="schatpage"),
+  path('sajaxchat/',views.sajaxchat,name="sajaxchat"),
+  path('sajaxchatview/',views.sajaxchatview,name="sajaxchatview"),
+  path('sclearchat/',views.sclearchat,name="sclearchat"),
+  path('ViewCollegeProfile/<int:pid>',views.ViewCollegeProfile,name="ViewCollegeProfile"),
+  path('ViewFacultyProfile/<int:fid>',views.ViewFacultyProfile,name="ViewFacultyProfile"),
+  path('ViewStudentProfile/<int:sid>',views.ViewStudentProfile,name="ViewStudentProfile "),
+  path('cchatpage/<int:id>',views.cchatpage,name="cchatpage"),
+  path('cajaxchat/',views.cajaxchat,name="cajaxchat"),
+  path('cajaxchatview/',views.cajaxchatview,name="cajaxchatview"),
+  path('cclearchat/',views.cclearchat,name="cclearchat"),
+] 
+
+
+

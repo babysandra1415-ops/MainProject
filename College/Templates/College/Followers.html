@@ -95,6 +95,7 @@
     <tr>
         <th>Sl No</th>
         <th>User</th>
+         <th>Photo</th>
         <th>Status</th>
         <th>Action</th>
     </tr>
@@ -125,13 +126,26 @@
             {% endif %}
         </td>
      
-        <td>
-            {% if i.follow_status == 1 %}
-               
+        <td>{% if i.tocollege %}
+                 <a href="{% url 'College:ViewCollegeProfile' i.tocollege.id %}">View Profile</a>|
+                {% elif i.tofaculty %} 
+                 <a href="{% url 'College:ViewFacultyProfile' i.tofaculty.id %}">View Profile</a>|
+                {% elif i.tostudent %}
+                <a href="{% url 'College:ViewStudentProfile' i.tostudent.id %}">View Profile</a>|
+            {% endif %} 
             
-               <a href="{% url 'College:rejectrequest' i.id %}">Unfollow</a>
+            {% if i.follow_status == 1 %}
+                {% if i.tocollege %}
+                 <a href="{% url 'College:chatpage' i.tocollege.id %}">Chat</a>
+                {% elif i.tofaculty %} 
+                 <a href="{% url 'College:fchatpage' i.tofaculty.id %}">Chat</a>
+                {% elif i.tostudent %}
+                  <a href="{% url 'College:schatpage' i.tostudent.id %}">Chat</a>
+            {% endif %}
+            
+               |<a href="{% url 'College:rejectrequest' i.id %}">Unfollow</a>
             {% else %}
-            requested
+            Requested
                
             {% endif %}
             

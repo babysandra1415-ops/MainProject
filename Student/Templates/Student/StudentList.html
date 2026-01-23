@@ -27,15 +27,16 @@
 
                 </td>
                 <td>
+                    <a href="{% url 'Student:ViewStudentProfile' i.id %}">View Profile</a>
                 {% if i.id in followed_ids %}
                     {% if i.id in pending_ids %}
-                        <span>Request Sent</span> |<a href="{% url 'Student:StudentList' i.id %}">View Profile</a>
+                        <span>Request Sent</span>
                     {% else %}
-                        <span>Following</span> |<a href="{% url 'Student:StudentList' i.id %}">View Profile</a>
+                        <span>Following</span>
                     {% endif %}
                 {% else %}
                     <a href="{% url 'Student:FollowU' i.id %}">Follow</a>|
-                 <a href="{% url 'Student:StudentList' i.id %}">View Profile</a>
+                 
                 {% endif %}
                 </td>
 
