@@ -38,7 +38,7 @@
 
       <div class="collapse navbar-collapse" id="ftco-nav">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
+          <li class="nav-item active"><a href="../index/" class="nav-link">Home</a></li>
           <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
           <li class="nav-item"><a href="../CollegeRegistration/" class="nav-link">College Registration</a></li>
           <li class="nav-item"><a href="../StudentRegistration/" class="nav-link">Student Registrations</a></li>
@@ -116,8 +116,8 @@
             <div class="media block-6 services p-3 py-4 d-block text-center">
               <div class="icon d-flex justify-content-center align-items-center mb-3"><span class="flaticon-blackboard"></span></div>
               <div class="media-body px-3">
-                <h3 class="heading">Scroll</h3>
-                <p>Scroll posts from students,faculty and colleges across the states</p>
+                <h3 class="heading">Dashboard</h3>
+                <p>Private and Public posting and viewing</p>
               </div>
             </div>      
           </div>
@@ -142,60 +142,68 @@
     			<div class="col-md-9 about-video text-center">
     				<h2 class="ftco-animate">Connecting Campuses Across Kerala</h2>
     				<div class="video d-flex justify-content-center">
-    					<a href="https://vimeo.com/45830194" class="button popup-vimeo d-flex justify-content-center align-items-center"><span class="ion-ios-play"></span></a>
+    				<a href="{% static 'Main/videos/Recording1.mp4' %}"
+   class="button popup-vimeo d-flex justify-content-center align-items-center">
+   <span class="ion-ios-play"></span>
+</a>
     				</div>
     			</div>
     		</div>
     	</div>
     </section>
-    <section class="ftco-counter bg-light" id="section-counter">
-    	<div class="container">
-    		<div class="row justify-content-center">
-    			<div class="col-md-10">
-		    		<div class="row">
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="10300">0</strong>
-		                <span>Students</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="7896">0</strong>
-		                <span>Colleges</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="400">0</strong>
-		                <span>Professors</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 text-center">
-		              <div class="text">
-		                <strong class="number" data-number="200">0</strong>
-		                <span>Posts</span>
-		              </div>
-		            </div>
-		          </div>
-		        </div>
-	        </div>
+   <section class="ftco-counter bg-light" id="section-counter">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div class="row">
+
+          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="{{ student_count }}">0</strong>
+                <span>Students</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="{{ college_count }}">0</strong>
+                <span>Colleges</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="{{ faculty_count }}">0</strong>
+                <span>Professors</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="{{ post_count }}">0</strong>
+                <span>Posts</span>
+              </div>
+            </div>
+          </div>
+
         </div>
-    	</div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
     <section class="ftco-section testimony-section">
       <div class="container">
       	<div class="row justify-content-center mb-5 pb-3">
           <div class="col-md-7 heading-section ftco-animate text-center">
-            <h2 class="mb-4">What Our Student Says</h2>
+            <h2 class="mb-4">What Our Users Say</h2>
           </div>
         </div>
         <div class="row">
@@ -203,57 +211,57 @@
             <div class="carousel-testimony owl-carousel">
               <div class="item">
                 <div class="testimony-wrap text-center">
-                  <div class="user-img mb-5" style="background-image: url(../static/Main/images/person_1.jpg)">
+                  <div class="user-img mb-5" style="background-image: url(../static/Main/images/person_1.jpeg)">
                     <span class="quote d-flex align-items-center justify-content-center">
                       <i class="icon-quote-left"></i>
                     </span>
                   </div>
                   <div class="text">
-                    <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-                    <p class="name">Dennis Green</p>
-                    <span class="position">CSE Student</span>
+                    <p class="mb-5">It was such a refreshing experience to connect with my fellow students across the state</p>
+                    <p class="name">Krishnapriya Dileep</p>
+                    <span class="position">BCA,St.Marys,Thuruthiply</span>
                   </div>
                 </div>
               </div>
               <div class="item">
                 <div class="testimony-wrap text-center">
-                  <div class="user-img mb-5" style="background-image: url(../static/Main/images/person_2.jpg)">
+                  <div class="user-img mb-5" style="background-image: url(../static/Main/images/person_2.jpeg)">
                     <span class="quote d-flex align-items-center justify-content-center">
                       <i class="icon-quote-left"></i>
                     </span>
                   </div>
                   <div class="text">
-                    <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-                    <p class="name">Dennis Green</p>
-                    <span class="position">Math Student</span>
+                    <p class="mb-5">It was such a proud moment to share my notes with students from all the colleges in Kerala</p>
+                    <p class="name">Noby Alias</p>
+                    <span class="position">Maths,Professor</span>
                   </div>
                 </div>
               </div>
               <div class="item">
                 <div class="testimony-wrap text-center">
-                  <div class="user-img mb-5" style="background-image: url(../static/Main/images/person_3.jpg)">
+                  <div class="user-img mb-5" style="background-image: url(../static/Main/images/mereena.jpeg)">
                     <span class="quote d-flex align-items-center justify-content-center">
                       <i class="icon-quote-left"></i>
                     </span>
                   </div>
                   <div class="text">
-                    <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-                    <p class="name">Dennis Green</p>
-                    <span class="position">Science Students</span>
+                    <p class="mb-5">Posted My poems for all English students across Kerala in a single post</p>
+                    <p class="name">Mereena PV</p>
+                    <span class="position">Professor,English</span>
                   </div>
                 </div>
               </div>
               <div class="item">
                 <div class="testimony-wrap text-center">
-                  <div class="user-img mb-5" style="background-image: url(../static/Main/images/person_3.jpg)">
+                  <div class="user-img mb-5" style="background-image: url(../static/Main/images/person_3.png)">
                     <span class="quote d-flex align-items-center justify-content-center">
                       <i class="icon-quote-left"></i>
                     </span>
                   </div>
                   <div class="text">
-                    <p class="mb-5">Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-                    <p class="name">Dennis Green</p>
-                    <span class="position">English Student</span>
+                    <p class="mb-5">Its Like instagram but for students, got to experience so many college fest through the photos</p>
+                    <p class="name">Angela Reni</p>
+                    <span class="position">English Student,Marthomma college,Perumbavoor</span>
                   </div>
                 </div>
               </div>
@@ -263,7 +271,7 @@
       </div>
     </section>
 
-    <section class="ftco-section bg-light">
+    <!-- <section class="ftco-section bg-light">
       <div class="container">
       	<div class="row justify-content-center mb-5 pb-3">
           <div class="col-md-7 heading-section ftco-animate text-center">
@@ -348,9 +356,9 @@
     			</div>
     		</div>
     	</div>
-    </section>
+    </section> -->
 
-    <section class="ftco-section">
+    <!-- <section class="ftco-section">
     	<div class="container">
     		<div class="row justify-content-center mb-5 pb-3">
           <div class="col-md-7 heading-section ftco-animate text-center">
@@ -399,8 +407,8 @@
         	</div>
         </div>
     	</div>
-    </section>
-
+    </section> -->
+<!-- 
     <section class="ftco-section bg-light">
       <div class="container">
         <div class="row justify-content-center mb-5 pb-3">
@@ -519,9 +527,9 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 		
-		<section class="ftco-section-parallax">
+		<!-- <section class="ftco-section-parallax">
       <div class="parallax-img d-flex align-items-center">
         <div class="container">
           <div class="row d-flex justify-content-center">
@@ -542,7 +550,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <footer class="ftco-footer ftco-bg-dark ftco-section img" style="background-image: url(../static/Main/images/bg_2.jpg); background-attachment:fixed;">
     	<div class="overlay"></div>
@@ -550,8 +558,8 @@
         <div class="row mb-5">
           <div class="col-md-3">
             <div class="ftco-footer-widget mb-4">
-              <h2><a class="navbar-brand" href="index.html"><i class="flaticon-university"></i>Genius <br><small>University</small></a></h2>
-              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+              <h2><a class="navbar-brand" href="index.html"><i class="flaticon-university"></i>Kerala <br><small>Connect</small></a></h2>
+              <p>Connecting Campuses across the state of Kerala.</p>
               <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                 <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
@@ -561,7 +569,7 @@
           </div>
           <div class="col-md-4">
             <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Recent Blog</h2>
+              <!-- <h2 class="ftco-heading-2">Recent Blog</h2>
               <div class="block-21 mb-4 d-flex">
                 <a class="blog-img mr-4" style="background-image: url(../static/Main/images/image_1.jpg);"></a>
                 <div class="text">
@@ -569,11 +577,11 @@
                   <div class="meta">
                     <div><a href="#"><span class="icon-calendar"></span> July 12, 2018</a></div>
                     <div><a href="#"><span class="icon-person"></span> Admin</a></div>
-                    <div><a href="#"><span class="icon-chat"></span> 19</a></div>
-                  </div>
+                    <div><a href="#"><span class="icon-chat"></span> 19</a></div> -->
+                  <!-- </div> -->
                 </div>
               </div>
-              <div class="block-21 mb-4 d-flex">
+              <!-- <div class="block-21 mb-4 d-flex">
                 <a class="blog-img mr-4" style="background-image: url(../static/Main/images/image_2.jpg);"></a>
                 <div class="text">
                   <h3 class="heading"><a href="#">Even the all-powerful Pointing has no control about</a></h3>
@@ -585,16 +593,16 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           <div class="col-md-2">
              <div class="ftco-footer-widget mb-4 ml-md-4">
               <h2 class="ftco-heading-2">Site Links</h2>
               <ul class="list-unstyled">
-                <li><a href="#" class="py-2 d-block">Home</a></li>
-                <li><a href="#" class="py-2 d-block">About</a></li>
-                <li><a href="#" class="py-2 d-block">Courses</a></li>
-                <li><a href="#" class="py-2 d-block">Students</a></li>
-                <li><a href="#" class="py-2 d-block">Video</a></li>
+                <li><a href="../index/" class="py-2 d-block">Home</a></li>
+                <li><a href="about.html" class="py-2 d-block">About</a></li>
+                <li><a href="../CollegeRegistration/" class="py-2 d-block">CollegeRegistration</a></li>
+                <li><a href="../StudentRegistration/" class="py-2 d-block">StudentRegistration</a></li>
+                <li><a href="../Login/" class="py-2 d-block">Login</a></li>
               </ul>
             </div>
           </div>
@@ -603,9 +611,9 @@
             	<h2 class="ftco-heading-2">Have a Questions?</h2>
             	<div class="block-23 mb-3">
 	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+	                <li><span class="icon icon-map-marker"></span><span class="text">Elm Building, Muvattupuzha,Kerala, India</span></li>
+	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">7765456700</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">keralaconnect@gmail.com</span></a></li>
 	              </ul>
 	            </div>
             </div>
@@ -645,6 +653,39 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="{% static 'Main/js/google-map.js' %}"></script>
   <script src="{% static 'Main/js/main.js' %}"></script>
-    
+  
+  
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const counters = document.querySelectorAll(".number");
+  const speed = 150;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const counter = entry.target;
+
+        const updateCount = () => {
+          const target = +counter.getAttribute("data-number");
+          const count = +counter.innerText;
+          const increment = Math.ceil(target / speed);
+
+          if (count < target) {
+            counter.innerText = count + increment;
+            setTimeout(updateCount, 20);
+          } else {
+            counter.innerText = target;
+          }
+        };
+
+        updateCount();
+        observer.unobserve(counter);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(counter => observer.observe(counter));
+});
+</script>
   </body>
 </html>

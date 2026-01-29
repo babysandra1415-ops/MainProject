@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from Admin.models import *
 from Guest.models import *
 from College.models import *
+from Faculty.models import *
+
 # Create your views here.
 def UserRegistration(request):
     district=tbl_district.objects.all()
@@ -111,5 +113,16 @@ def Login(request):
     else:
         return render(request,'Guest/Login.html')
 def index(request):
-    return render(request,'Guest/index.html')
+    student_count = tbl_student.objects.count()
+    college_count = tbl_college.objects.count()
+    faculty_count = tbl_faculty.objects.count()
+    post_count = tbl_post.objects.count()
+
+    context = {
+        "student_count": student_count,
+        "college_count": college_count,
+        "faculty_count": faculty_count,
+        "post_count": post_count,
+    }
+    return render(request,"Guest/index.html", context)
     
