@@ -135,7 +135,7 @@
                 {% elif i.tofaculty %} 
                <a href="{% url 'Faculty:chatpage' i.tofaculty.id %}">Chat</a> | <a href="{% url 'Faculty:ViewFacultyProfile' i.tofaculty.id %}">View Profile</a>|
                 {% elif i.tostudent %}
-                <a href="{% url 'Faculty:schatpage' i.tostudent.id %}">Chat</a> | <a href="{% url 'Student:ViewFacultyProfile' i.tostudent.id %}">View Profile</a>|
+                <a href="{% url 'Faculty:schatpage' i.tostudent.id %}">Chat</a> | <a href="{% url 'Faculty:ViewStudentProfile' i.tostudent.id %}">View Profile</a>|
             {% endif %}
                <a href="{% url 'Faculty:rejectrequest' i.id %}">Unfollow</a> 
             {% else %}

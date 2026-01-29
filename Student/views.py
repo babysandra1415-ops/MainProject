@@ -441,3 +441,30 @@ def Search(request):
     else:
         return render(request,"Student/Search.html")
 
+def Notification(request):
+    student = tbl_student.objects.get(id=request.session["sid"])
+
+    likes = tbl_like.objects.filter(
+        post__student=student
+    ).exclude(student=student)
+    comments = tbl_comment.objects.filter(
+        post__student=student
+    ).exclude(student=student)
+
+    replies = tbl_commentreply.objects.filter(
+        comment__student=student
+    ).exclude(student=student)
+    follows = tbl_follow.objects.filter(
+        tostudent=student,
+        follow_status=1
+    )
+    news = tbl_news.objects.filter(news_status=1)
+
+    context = {
+        "likes": likes,
+        "comments": comments,
+        "replies": replies,
+        "follows": follows,
+        "news": news
+    }
+    return render(request, "Student/Notification.html", context)

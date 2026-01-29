@@ -48,6 +48,8 @@ urlpatterns = [
   path('fajaxchat/',views.fajaxchat,name="fajaxchat"),
   path('fajaxchatview/',views.fajaxchatview,name="fajaxchatview"),
   path('fclearchat/',views.fclearchat,name="fclearchat"),
+  path('Search/',views.Search,name="Search"),
+  path('Notification/',views.Notification,name="Notification"),
   
   
 ]

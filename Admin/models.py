@@ -29,3 +29,9 @@ class tbl_subject(models.Model):
     subject_name=models.CharField(max_length=100)
     course=models.ForeignKey(tbl_course,on_delete=models.CASCADE)
     semester=models.ForeignKey(tbl_semester,on_delete=models.CASCADE)
+class tbl_news(models.Model):
+    news_description=models.CharField(max_length=1400)
+    news_file=models.FileField(upload_to="Assets/AdminDocs/news/file",null=True)
+    news_photo=models.FileField(upload_to="Assets/AdminDocs/news/photo",null=True)
+    news_status=models.IntegerField(default=0)
+    

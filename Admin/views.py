@@ -285,7 +285,21 @@ def Reply(request, rrid):
     return render(request, "Admin/Reply.html", {
         "complaint": complaint
     })
-
+def Addnews(request):
+    
+    news=tbl_news.objects.all()
+    if request.method == "POST":
+        
+        description=request.POST.get("txt_description")
+        file=request.FILES.get("file_notes")
+        photo=request.FILES.get("file_photo")
+        tbl_news.objects.create(news_description=description,news_file=file,news_photo=photo)
+        return render(request,'Admin/Addnews.html',{'news':news})
+    else:
+        return render(request,'Admin/Addnews.html',{'news':news})
+def delnews(request,did):
+    tbl_news.objects.get(id=did).delete()
+    return redirect("Admin:Addnews")
 
 
 

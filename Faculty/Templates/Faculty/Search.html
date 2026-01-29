@@ -67,7 +67,7 @@
         <td><img src="{{ c.college_logo.url }}" width="60"></td>
         <td>{{ c.college_name }}</td>
         <td>{{ c.college_email }}</td>
-        <td><a href="{% url 'Faculty:ViewStudentProfile' c.id %}">View Profile</a>|<a href="{% url 'Faculty:Follow' c.id %}">Follow</a></td>
+        <td><a href="{% url 'Faculty:ViewCollegeProfile' c.id %}">View Profile</a>|<a href="{% url 'Faculty:Follow' c.id %}">Follow</a></td>
         
     </tr>
     {% endfor %}

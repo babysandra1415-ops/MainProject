@@ -441,7 +441,35 @@ def Search(request):
         elif usertype == "College":
             student = tbl_student.objects.none()
             faculty = tbl_faculty.objects.none()
-        return render(request,"Student/Search.html",{'student':student,'college':college,'faculty':faculty})
+        return render(request,"Faculty/Search.html",{'student':student,'college':college,'faculty':faculty})
     else:
-        return render(request,"Student/Search.html")
+        return render(request,"Faculty/Search.html")
+
+def Notification(request):
+    faculty = tbl_faculty.objects.get(id=request.session["fid"])
+
+    likes = tbl_like.objects.filter(
+        post__faculty=faculty
+    ).exclude(faculty=faculty)
+    comments = tbl_comment.objects.filter(
+        post__faculty=faculty
+    ).exclude(faculty=faculty)
+
+    replies = tbl_commentreply.objects.filter(
+        comment__faculty=faculty
+    ).exclude(faculty=faculty)
+    follows = tbl_follow.objects.filter(
+        tofaculty=faculty,
+        follow_status=1
+    )
+    news = tbl_news.objects.filter(news_status=1)
+
+    context = {
+        "likes": likes,
+        "comments": comments,
+        "replies": replies,
+        "follows": follows,
+        "news": news
+    }
+    return render(request, "Faculty/Notification.html", context)
 

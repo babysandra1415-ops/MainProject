@@ -39,11 +39,13 @@ urlpatterns = [
   path('sclearchat/',views.sclearchat,name="sclearchat"),
   path('ViewCollegeProfile/<int:pid>',views.ViewCollegeProfile,name="ViewCollegeProfile"),
   path('ViewFacultyProfile/<int:fid>',views.ViewFacultyProfile,name="ViewFacultyProfile"),
-  path('ViewStudentProfile/<int:sid>',views.ViewStudentProfile,name="ViewStudentProfile "),
+  path('ViewStudentProfile/<int:sid>',views.ViewStudentProfile,name="ViewStudentProfile"),
   path('cchatpage/<int:id>',views.cchatpage,name="cchatpage"),
   path('cajaxchat/',views.cajaxchat,name="cajaxchat"),
   path('cajaxchatview/',views.cajaxchatview,name="cajaxchatview"),
   path('cclearchat/',views.cclearchat,name="cclearchat"),
+  path('Search/',views.Search,name="Search"),
+  path('Notification/',views.Notification,name="Notification"),
 ] 
 
 

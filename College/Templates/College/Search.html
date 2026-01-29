@@ -54,7 +54,7 @@
         <td>{{ s.student_name }}</td>
         <td>{{ s.student_username }}</td>
         
-        <td><a href="{% url 'Student:ViewStudentProfile' s.id %}">View Profile</a>|<a href="{% url 'Student:FollowU' s.id %}">Follow</a>
+        <td><a href="{% url 'College:ViewStudentProfile' s.id %}">View Profile</a>|<a href="{% url 'College:FollowS' s.id %}">Follow</a>
         </td>
         
     </tr>
@@ -67,7 +67,7 @@
         <td><img src="{{ c.college_logo.url }}" width="60"></td>
         <td>{{ c.college_name }}</td>
         <td>{{ c.college_email }}</td>
-        <td><a href="{% url 'Student:ViewCollegeProfile' c.id %}">View Profile</a>|<a href="{% url 'Student:Follow' c.id %}">Follow</a></td>
+        <td><a href="{% url 'College:ViewCollegeProfile' c.id %}">View Profile</a>|<a href="{% url 'College:FollowC' c.id %}">Follow</a></td>
         
     </tr>
     {% endfor %}
@@ -79,7 +79,7 @@
         <td><img src="{{ f.faculty_photo.url }}" width="60"></td>
         <td>{{ f.faculty_name }}</td>
         <td>{{ f.faculty_username }}</td>
-        <td><a href="{% url 'Student:ViewFacultyProfile' f.id %}">View Profile</a>|<a href="{% url 'Student:FollowF' f.id %}">Follow</a></td>
+        <td><a href="{% url 'College:ViewFacultyProfile' f.id %}">View Profile</a>|<a href="{% url 'College:FollowF' f.id %}">Follow</a></td>
     </tr>
     {% endfor %}
 
@@ -88,7 +88,7 @@
 <script>
     function reload()
     {
-        window.location="{% url 'Student:Search' %}"
+        window.location="{% url 'College:Search' %}"
     }
 </script>
 </body>

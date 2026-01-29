@@ -46,4 +46,6 @@ urlpatterns = [
   path('cajaxchatview/',views.cajaxchatview,name="cajaxchatview"),
   path('cclearchat/',views.cclearchat,name="cclearchat"),
   path('Search/',views.Search,name="Search"),
+  path('Notification/',views.Notification,name="Notification"),
+
 ]

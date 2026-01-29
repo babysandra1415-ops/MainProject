@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notifications</title>
+</head>
+<body>
+
+<h2 align="center">Notifications</h2>
+
+<table border="1" width="80%" align="center" cellpadding="8" cellspacing="0">
+
+    <tr>
+        <th width="10%">Photo</th>
+        <th width="20%">Name</th>
+        <th width="50%">Details</th>
+        <th width="20%">Post / Extra</th>
+    </tr>
+
+    <!-- ================= LIKES ================= -->
+    {% for l in likes %}
+    <tr>
+        <td align="center">
+            {% if l.student %}
+                <img src="{{ l.student.student_photo.url }}" width="40" height="40">
+            {% elif l.faculty %}
+                <img src="{{ l.faculty.faculty_photo.url }}" width="40" height="40">
+            {% endif %}
+        </td>
+
+        <td>
+            {% if l.student %}{{ l.student.student_name }}{% endif %}
+            {% if l.faculty %}{{ l.faculty.faculty_name }}{% endif %}
+        </td>
+
+        <td>
+            Liked your post<br>
+            {{ l.post.post_description }}
+        </td>
+
+        <td align="center">
+            {% if l.post.post_photo %}
+                <img src="{{ l.post.post_photo.url }}" width="60">
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+    <!-- ================= COMMENTS ================= -->
+    {% for c in comments %}
+    <tr>
+        <td align="center">
+            {% if c.student %}
+                <img src="{{ c.student.student_photo.url }}" width="40">
+            {% elif c.faculty %}
+                <img src="{{ c.faculty.faculty_photo.url }}" width="40">
+            {% endif %}
+        </td>
+
+        <td>
+            {% if c.student %}{{ c.student.student_name }}{% endif %}
+            {% if c.faculty %}{{ c.faculty.faculty_name }}{% endif %}
+        </td>
+
+        <td>
+            Commented on your post<br>
+            "{{ c.comment_content }}"
+        </td>
+
+        <td align="center">
+            {% if c.post.post_photo %}
+                <img src="{{ c.post.post_photo.url }}" width="60">
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+    <!-- ================= REPLIES ================= -->
+    {% for r in replies %}
+    <tr>
+        <td align="center">
+            {% if r.student %}
+                <img src="{{ r.student.student_photo.url }}" width="40">
+            {% elif r.faculty %}
+                <img src="{{ r.faculty.faculty_photo.url }}" width="40">
+            {% endif %}
+        </td>
+
+        <td>
+            {% if r.student %}{{ r.student.student_name }}{% endif %}
+            {% if r.faculty %}{{ r.faculty.faculty_name }}{% endif %}
+        </td>
+
+        <td colspan="2">
+            Replied to your comment<br>
+            "{{ r.commentreply_content }}"
+        </td>
+    </tr>
+    {% endfor %}
+
+    <!-- ================= FOLLOW ================= -->
+    {% for f in follows %}
+    <tr>
+        <td align="center">
+            {% if f.fromstudent %}
+                <img src="{{ f.fromstudent.student_photo.url }}" width="40">
+            {% elif f.fromfaculty %}
+                <img src="{{ f.fromfaculty.faculty_photo.url }}" width="40">
+            {% elif f.fromcollege %}
+                <img src="{{ f.fromcollege.college_logo.url }}" width="40">
+            {% endif %}
+        </td>
+
+        <td>
+            {% if f.fromstudent %}
+                {{ f.fromstudent.student_name }} (Student)
+            {% elif f.fromfaculty %}
+                {{ f.fromfaculty.faculty_name }} (Faculty)
+            {% elif f.fromcollege %}
+                {{ f.fromcollege.college_name }} (College)
+            {% endif %}
+        </td>
+
+        <td colspan="2">
+            Started following you
+        </td>
+    </tr>
+    {% endfor %}
+
+    <!-- ================= NEWS ================= -->
+    {% for n in news %}
+    <tr>
+        <td align="center">Admin</td>
+
+        <td>Admin</td>
+
+        <td>
+            News Update<br>
+            {{ n.news_description }}
+        </td>
+
+        <td align="center">
+            {% if n.news_photo %}
+                <img src="{{ n.news_photo.url }}" width="60">
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>

@@ -437,3 +437,76 @@ def fajaxchatview(request):
 def fclearchat(request):
     tbl_chat.objects.filter(Q(college_from=request.session["cid"]) & Q(faculty_to=request.GET.get("tid")) | (Q(faculty_from=request.GET.get("tid")) & Q(college_to=request.session["cid"]))).delete()
     return render(request,"College/FClearChat.html",{"msg":"Chat Deleted Sucessfully...."})
+def Search(request):
+    # student=tbl_student.objects.all().exclude(id=request.session['sid'])
+    # faculty= tbl_faculty.objects.all()
+    # college = tbl_college.objects.all()
+    if request.method == "POST":
+        student=tbl_student.objects.all()
+        faculty= tbl_faculty.objects.all()
+        college = tbl_college.objects.all().exclude(id=request.session['fid'])
+        search = request.POST.get("txt_search")
+        usertype = request.POST.get("sel_user")
+       
+        # If search text exists
+        if search:
+            student = student.filter(
+                Q(student_name__icontains=search) |
+                Q(student_username__icontains=search)
+            )
+
+            faculty = faculty.filter(
+                Q(faculty_name__icontains=search) |
+                Q(faculty_username__icontains=search)
+            )
+
+            college = college.filter(
+                Q(college_name__icontains=search) |
+                Q(college_email__icontains=search)
+            )
+
+        # If filter selected
+        if usertype == "Student":
+            faculty = tbl_faculty.objects.none()
+            college = tbl_college.objects.none()
+
+        elif usertype == "Faculty":
+            student = tbl_student.objects.none()
+            college = tbl_college.objects.none()
+
+        elif usertype == "College":
+            student = tbl_student.objects.none()
+            faculty = tbl_faculty.objects.none()
+        return render(request,"College/Search.html",{'student':student,'college':college,'faculty':faculty})
+    else:
+        return render(request,"College/Search.html")
+
+def Notification(request):
+    college = tbl_college.objects.get(id=request.session["cid"])
+
+    likes = tbl_like.objects.filter(
+        post__college=college
+    ).exclude(college=college)
+    comments = tbl_comment.objects.filter(
+        post__college=college
+    ).exclude(college=college)
+
+    replies = tbl_commentreply.objects.filter(
+        comment__college=college
+    ).exclude(college=college)
+    follows = tbl_follow.objects.filter(
+        tocollege=college,
+        follow_status=1
+    )
+    news = tbl_news.objects.filter(news_status=1)
+
+    context = {
+        "likes": likes,
+        "comments": comments,
+        "replies": replies,
+        "follows": follows,
+        "news": news
+    }
+    return render(request, "College/Notification.html", context)
+
+
