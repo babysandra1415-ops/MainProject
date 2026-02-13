@@ -1,3 +1,5 @@
+{% extends 'Student/head.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +15,7 @@
             <tr>
                 <td>Department</td>
                 <td><select name="sel_department" id="sel_department">
-                        <option value="">--select--</option>
+                        <option value="Department">--select--</option>
                         {% for i in department %}
                         <option value="{{i.id}}">{{i.department_name}}
 
@@ -28,7 +30,7 @@
             <tr>
                 <td>Semester</td>
                 <td><select name="sel_semester" id="sel_semester">
-                        <option value="">--select--</option>
+                        <option value="Semester">--select--</option>
                         {% for i in semester %}
                         <option value="{{i.id}}">{{i.semester_name}}
 
@@ -46,7 +48,7 @@
             </tr>
         </table>
     </form>
-    <table align="center" border="1">
+    <table align="center" border="1" id="result">
         <tr>
             <td>SlNo</td>
             <td>File</td>
@@ -78,6 +80,40 @@
         });
     });
 </script>
+<!-- 
+<script>
+    $("#sel_department").change(function () {
+
+        var did = $(this).val();
+        var ur = "{% url 'Student:AjaxCompresult' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, },
+            success: function (data) {
+                $("#result").html(data);
+            },
+        });
+    });
+</script> -->
+
+<script>
+    $("#sel_department, #sel_course, #sel_semester, #sel_subject").change(function () {
+
+        var did = $(this).val();
+        var cid = document.getElementById('sel_course').value
+        var sem = document.getElementById('sel_semester').value
+        var sub = document.getElementById('sel_subject').value
+        var ur = "{% url 'Student:AjaxCompresult' %}"
+        $.ajax({
+            url: ur,
+            data: { did: did, cid:cid, sem:sem, sub:sub },
+            success: function (data) {
+                $("#result").html(data);
+            },
+        });
+    });
+</script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $("#sel_semester").change(function () {
@@ -93,3 +129,4 @@
         });
     }); 
 </script>
+{% endblock %}

@@ -1,44 +1,171 @@
+{% extends 'Student/head.html' %}
+{% block content %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EditProfile</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:#f2f4f8;
+        }
+
+        /* center card */
+        .profile-container{
+            min-height:90vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+
+        /* card style (same look as your profile page) */
+        .profile-card{
+            background:white;
+            width:420px;
+            padding:35px 40px;
+            border-radius:16px;
+            box-shadow:0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:25px;
+            color:#333;
+            font-size:26px;
+            font-weight:600;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        td{
+            padding:10px 0;
+            border:none;
+        }
+
+        td:first-child{
+            font-weight:600;
+            color:#444;
+            width:35%;
+        }
+
+        input[type="text"],
+        input[type="email"]{
+            width:100%;
+            padding:10px 12px;
+            border-radius:8px;
+            border:1px solid #dcdcdc;
+            outline:none;
+            font-size:14px;
+            transition:0.2s;
+        }
+
+        input:focus{
+            border-color:#4e73df;
+            box-shadow:0 0 0 2px rgba(78,115,223,0.15);
+        }
+
+        input[type="submit"]{
+            margin-top:15px;
+            width:100%;
+            padding:11px;
+            border:none;
+            border-radius:8px;
+            background:#4e73df;
+            color:white;
+            font-weight:600;
+            font-size:15px;
+            cursor:pointer;
+            transition:0.2s;
+        }
+
+        input[type="submit"]:hover{
+            background:#2e59d9;
+        }
+    </style>
 </head>
+
 <body>
-    <form action="" method="post">
-        {% csrf_token %}
-        <h1 align="center">Edit Profile</h1>
-        <table border="1" align="center">
-            <tr>
-                <td>Name</td>
-                <td><input type="text" name="txt_name" id="txt_name" value="{{studentdata.student_name}}"></td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td><input type="text" name="txt_email" id="txt_email" value="{{studentdata.student_email}}"></td>
-            </tr>
-            <tr>
-                <td>Contact</td>
-                <td><input type="text" name="txt_contact" id="txt_contact" value="{{studentdata.student_contact}}"></td>
-            </tr>
-             <tr>
-                <td>BioData</td>
-                <td><input type="text" name="txt_biodata" id="txt_biodata" value="{{studentdata.student_bio}}"></td>
-            </tr>
-             <tr>
-                <td>Username</td>
-                <td><input type="text" name="txt_username" id="txt_username" value="{{studentdata.student_username}}"></td>
-            </tr>
-             
-            <tr>
-                <td colspan="2" align="center"><input type="submit" value="Update"></td>
-                
-            </tr>
-        </table>
-    </form>
-    
+
+<div class="profile-container">
+<div class="profile-card">
+
+<form action="" method="post">
+    {% csrf_token %}
+    <h1>Edit Profile</h1>
+
+    <table>
+        <tr>
+            <td>Name</td>
+            <td>
+                <input type="text" name="txt_name" id="txt_name"
+                value="{{studentdata.student_name}}"
+                placeholder="Enter new Name"
+                required
+                title="Name Allows Only Alphabets,Spaces and First Letter Must Be Capital Letter"
+                pattern="^[A-Z]+[a-zA-Z ]*$">
+            </td>
+        </tr>
+
+        <tr>
+            <td>Email</td>
+            <td>
+                <input type="email" name="txt_email" id="txt_email"
+                value="{{studentdata.student_email}}"
+                placeholder="Enter new Email" required>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Contact</td>
+            <td>
+                <input type="text" name="txt_contact" id="txt_contact"
+                value="{{studentdata.student_contact}}"
+                placeholder="Enter new Contact"
+                pattern="[7-9]{1}[0-9]{9}"
+                title="Phone number with 7-9 and remaining 9 digits with 0-9"
+                required>
+            </td>
+        </tr>
+
+        <tr>
+            <td>BioData</td>
+            <td>
+                <input type="text" name="txt_biodata" id="txt_biodata"
+                value="{{studentdata.student_bio}}"
+                placeholder="Enter new Biodata" required>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Username</td>
+            <td>
+                <input type="text" name="txt_username" id="txt_username"
+                value="{{studentdata.student_username}}"
+                placeholder="Enter new UserName" required>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Update">
+            </td>
+        </tr>
+    </table>
+</form>
+
+</div>
+</div>
+
 </body>
+
 {% if msg %}
 <script>
     alert("{{msg}}")
@@ -46,3 +173,5 @@
 </script>
 {% endif %}
 </html>
+
+{% endblock %}

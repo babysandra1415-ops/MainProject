@@ -1,0 +1,15 @@
+<table align="center" border="1" >
+        <tr>
+            <td>SlNo</td>
+            <td>File</td>
+            <td>Description</td>
+        </tr>
+        {% for i in data %}
+        <tr>
+
+            <td>{{forloop.counter}}</td>
+            <td><a href="{{i.notes_file.url}}">File</a></td>
+            <td>{{i.notes_description}}</td>
+        </tr>
+         {% endfor %}
+    </table>

@@ -11,6 +11,7 @@ urlpatterns = [
   path("ChangePassword/",views.ChangePassword,name="ChangePassword"), 
   path("ViewNotes/",views.ViewNotes,name="ViewNotes"),
   path("AjaxCourse/",views.AjaxCourse,name="AjaxCourse"),
+  path('AjaxCompresult/',views.AjaxCompresult,name="AjaxCompresult"),
   path('Post/',views.Post,name="Post"),
   path('delpost/<int:did>',views.delpost,name="delpost"),
   path('ViewPost/',views.ViewPost,name="ViewPost"), 

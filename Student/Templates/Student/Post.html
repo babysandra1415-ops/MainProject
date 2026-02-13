@@ -1,62 +1,219 @@
+{% extends 'Student/head.html' %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post</title>
+
+<style>
+
+/* ---------- page ---------- */
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f0f2f5;
+    margin:0;
+    padding:20px;
+}
+
+/* ---------- card ---------- */
+.card{
+    background:#fff;
+    max-width:600px;
+    margin:20px auto;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* ---------- form ---------- */
+.post-form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+textarea{
+    width:100%;
+    height:80px;
+    resize:none;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    font-size:14px;
+}
+
+/* file */
+input[type="file"]{
+    font-size:13px;
+}
+
+/* radio */
+.type-row{
+    display:flex;
+    gap:20px;
+    font-size:14px;
+}
+
+/* button */
+button{
+    background:#1877f2;
+    color:white;
+    border:none;
+    padding:10px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#166fe0;
+}
+
+/* ---------- emoji bar ---------- */
+.emoji-bar{
+    font-size:20px;
+    display:flex;
+    gap:10px;
+    cursor:pointer;
+}
+
+/* ---------- FEED ---------- */
+.feed{
+    max-width:600px;
+    margin:25px auto;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+
+.feed-card{
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 6px 18px rgba(0,0,0,0.1);
+}
+
+.feed-image{
+    width:100%;
+    max-height:480px;
+    object-fit:cover;
+}
+
+.feed-body{
+    padding:14px;
+}
+
+.feed-desc{
+    font-size:15px;
+    margin-bottom:12px;
+}
+
+/* footer */
+.feed-footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:13px;
+}
+
+.delete-btn{
+    color:#e74a3b;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.delete-btn:hover{
+    text-decoration:underline;
+}
+
+</style>
 </head>
+
+
 <body>
-    <form action="" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <h1 align="center">POST</h1>
-        <table align="center" border="1">
-            <tr>
-                <td>Photo</td>
-                <td><input type="file" name="file_photo" id="file_photo"></td>
-            </tr>
-            <tr>
-                <td>Description</td>
-                <td><input type="text" name="txt_description" id="txt_description"></td>
-            </tr>
-            <tr>
-                <td>Type</td>
-                <td><input type="radio" name="txt_post" id="txt_post" value="1">Private<input type="radio"
-                        name="txt_post" id="txt_post" value="0">Public</td>
-            </tr>
-            <tr>
-                <td align="center" colspan="2"><input type="submit" value="Submit"></td>
-                
-            </tr>
-        </table>
-    </form>
-    <table align="center" border="1">
-        <tr>
-            <td>SlNo</td>
-            <td>Photo</td>
-            <td>Description</td>
-            <td>Type</td>
-            <td>Action</td>
-        </tr>
-        {% for i in post %}
-        <tr>
-           <td>{{forloop.counter}}</td>
-            <td><img src="{{i.post_photo.url}}" width="100" height="100" /></td>
-            <td>{{i.post_description}}</td>
-            <td>{% if i.post_type == 1 %}
-                Private
+
+<!-- ================= FORM ================= -->
+
+<div class="card">
+<h2 align="center">Create Post</h2>
+
+<form action="" method="post" enctype="multipart/form-data" class="post-form">
+{% csrf_token %}
+
+<input type="file" name="file_photo">
+
+<textarea id="desc" name="txt_description" placeholder="What's on your mind? 😊"></textarea>
+
+<div class="emoji-bar">
+    <span onclick="addEmoji('😊')">😊</span>
+    <span onclick="addEmoji('😂')">😂</span>
+    <span onclick="addEmoji('😍')">😍</span>
+    <span onclick="addEmoji('🔥')">🔥</span>
+    <span onclick="addEmoji('👍')">👍</span>
+    <span onclick="addEmoji('❤️')">❤️</span>
+</div>
+
+<div class="type-row">
+<label><input type="radio" name="txt_post" value="1"> 🔒 Private</label>
+<label><input type="radio" name="txt_post" value="0" checked> 🌍 Public</label>
+</div>
+
+<button type="submit">Post</button>
+
+</form>
+</div>
+
+
+<!-- ================= FEED ================= -->
+
+<div class="feed">
+
+{% for i in post %}
+<div class="feed-card">
+
+    <img src="{{i.post_photo.url}}" class="feed-image">
+
+    <div class="feed-body">
+
+        <p class="feed-desc">{{i.post_description}}</p>
+
+        <div class="feed-footer">
+            <span>
+                {% if i.post_type == 1 %}
+                    🔒 Private
                 {% else %}
-                Public
-                {% endif %}</td>
-            <td><a href="{% url 'Student:delpost' i.id %}">Delete</a></td>
-        </tr>
-         {% endfor %}
-    </table>
-</body>
-</html>
+                    🌍 Public
+                {% endif %}
+            </span>
+
+            <a href="{% url 'Student:delpost' i.id %}" class="delete-btn">Delete</a>
+        </div>
+
+    </div>
+</div>
+{% endfor %}
+
+</div>
+
+
+<!-- ================= JS ================= -->
+
+<script>
+function addEmoji(e){
+    document.getElementById("desc").value += e;
+}
+</script>
+
+
 {% if msg %}
 <script>
-
-    alert("{{msg}}")
-    window.location = "{% url 'Student:Post' %}";
+alert("{{msg}}")
+window.location="{% url 'Student:Post' %}"
 </script>
 {% endif %}
+
+</body>
+</html>
+{% endblock %}

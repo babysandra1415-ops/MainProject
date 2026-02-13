@@ -5,33 +5,43 @@ from Student.models import *
 from Faculty.models import *
 from django.db.models import Q
 from django.http import JsonResponse
+from django.template.loader import render_to_string
 from datetime import datetime
 # Create your views here.
 def HomePage(request):
-    Student = tbl_student.objects.get(id=request.session['sid'])
-    return render(request,'Student/HomePage.html',{'Student':Student})
-def MyProfile(request):
-    studentdata=tbl_student.objects.get(id=request.session["sid"])
-    return render(request,'Student/MyProfile.html',{"studentdata": studentdata})
-def EditProfile(request):
-    studentdata=tbl_student.objects.get(id=request.session["sid"])
-    if request.method == "POST":
-        name=request.POST.get('txt_name')
-        email=request.POST.get('txt_email')
-        contact=request.POST.get('txt_contact')
-        username=request.POST.get('txt_username')
-        bio=request.POST.get('txt_biodata')
-        
-        studentdata.student_name=name
-        studentdata.student_email=email
-        studentdata.student_contact=contact
-        studentdata.student_username=username
-        studentdata.student_bio=bio
-        studentdata.save()
-
-        return render(request,'Student/EditProfile.html',{'msg':'updated'})
+    if "sid" not in request.session:
+        return redirect("Guest/Login.html")
     else:
-        return render(request,'Student/EditProfile.html',{"studentdata":studentdata})
+        Student = tbl_student.objects.get(id=request.session['sid'])
+        return render(request,'Student/HomePage.html',{'Student':Student})
+def MyProfile(request):
+    if "sid" not in request.session:
+        return redirect("Guest/Login.html")
+    else:
+        studentdata=tbl_student.objects.get(id=request.session["sid"])
+        return render(request,'Student/MyProfile.html',{"studentdata": studentdata})
+def EditProfile(request):
+    if "sid" not in request.session:
+        return redirect("Guest/Login.html")
+    else:
+        studentdata=tbl_student.objects.get(id=request.session["sid"])
+        if request.method == "POST":
+            name=request.POST.get('txt_name')
+            email=request.POST.get('txt_email')
+            contact=request.POST.get('txt_contact')
+            username=request.POST.get('txt_username')
+            bio=request.POST.get('txt_biodata')
+        
+            studentdata.student_name=name
+            studentdata.student_email=email
+            studentdata.student_contact=contact
+            studentdata.student_username=username
+            studentdata.student_bio=bio
+            studentdata.save()
+
+            return render(request,'Student/EditProfile.html',{'msg':'updated'})
+        else:
+            return render(request,'Student/EditProfile.html',{"studentdata":studentdata})
 def topublic(request,pid):
     Student=tbl_student.objects.get(id=pid)
     Student.student_accounttype=0
@@ -64,18 +74,41 @@ def ChangePassword(request):
 def ViewNotes(request):
     student=tbl_student.objects.get(id=request.session["sid"])
     department=tbl_department.objects.all()
-   
+    notes=tbl_notes.objects.all()
     semester=tbl_semester.objects.all()
     if request.method == "POST":
         subject=tbl_subject.objects.get(id=request.POST.get("sel_subject"))
         notes=tbl_notes.objects.filter(subject=subject)
         return render(request,'Student/ViewNotes.html',{"department": department,'semester':semester,'notes':notes})
     else:
-        return render(request,'Student/ViewNotes.html',{"department": department,'semester':semester})
+        return render(request,'Student/ViewNotes.html',{"department": department,'semester':semester,'notes':notes})
+
 def AjaxCourse(request):
     departmentid = request.GET.get("did")
     course = tbl_course.objects.filter(department=departmentid)
     return render(request,"Student/AjaxCourse.html",{'course':course})
+
+def AjaxCompresult(request):
+    did=request.GET.get('did')
+    cid=request.GET.get('cid')
+    sem=request.GET.get('sem')
+    sub=request.GET.get('sub')
+    data=tbl_notes.objects.all()
+
+    if did:
+        data=tbl_notes.objects.filter(subject__course__department=did)
+        
+    elif did and cid:
+        data=tbl_notes.objects.filter(subject__course__department=did,subject__course=cid)
+    elif did and cid and sem:
+        data=tbl_notes.objects.filter(subject__course__department=did,subject__course=cid,subject__sem=sem)
+    elif did and cid and sem and sub:
+        data=tbl_notes.objects.filter(subject__course__department=did,subject__course=cid,subject__sem=sem,subject=sub)
+    # else:
+    #     data=tbl_notes.objects.all()
+    return render(request,"Student/Ajaxnotes.html",{'data':data})
+
+
 def Post(request):
     studentid = tbl_student.objects.get(id=request.session['sid']) 
     post=tbl_post.objects.filter(student=studentid)
