@@ -1,3 +1,107 @@
+{% extends 'Student/head.html' %}
+{% block content %}
+
+<style>
+
+    /* page background */
+    body{
+        background:#f0f2f5;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    h1{
+        margin:25px 0;
+        font-weight:600;
+    }
+
+    /* ===== FORM TABLE ===== */
+    table{
+        border-collapse: collapse;
+        background:white;
+        border-radius:12px;
+        overflow:hidden;
+        box-shadow:0 3px 10px rgba(0,0,0,0.1);
+        margin-bottom:30px;
+    }
+
+    table td{
+        padding:10px 14px;
+        border:none;
+    }
+
+    table tr{
+        border-bottom:1px solid #eee;
+    }
+
+    table tr:last-child{
+        border-bottom:none;
+    }
+
+    /* inputs */
+    input[type="text"],
+    textarea{
+        width:100%;
+        padding:8px;
+        border-radius:8px;
+        border:1px solid #ccc;
+        font-size:14px;
+    }
+
+    textarea{
+        height:100px;
+        resize:none;
+    }
+
+    /* submit button */
+    input[type="submit"]{
+        background:#0b4a9b;
+        color:white;
+        padding:8px 20px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+    }
+
+    input[type="submit"]:hover{
+        background:#0b4a9b;
+    }
+
+    /* ===== LIST TABLE ===== */
+    table + table{
+        width:70%;
+    }
+
+    table + table tr:first-child{
+        background:#0b4a9b;
+        color:white;
+        font-weight:bold;
+    }
+
+    table + table tr:not(:first-child):hover{
+        background:#f7f9fc;
+    }
+
+    /* delete link */
+    a{
+        color:red;
+        text-decoration:none;
+        font-weight:500;
+    }
+
+    a:hover{
+        text-decoration:underline;
+    }
+
+    /* responsive */
+    @media(max-width:768px){
+        table, table + table{
+            width:95%;
+        }
+    }
+
+</style>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +109,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complaint</title>
 </head>
+
 <body>
 
     <form action="" method="post">
         <h1 align="center">Complaint</h1>
         {% csrf_token %}
+
         <table align="center" border="1">
             <tr>
                 <td>Title</td>
@@ -21,29 +127,35 @@
             </tr>
             <tr>
                 <td colspan="2" align="center"><input type="submit" value="Submit"></td>
-                
             </tr>
         </table>
-<table align="center" border="1"><tr>
-    <td>SlNo</td>
-    <td>Title</td>
-    <td>Content</td>
-    <td>Date</td>
-    <td>Reply</td>
-    <td>Action</td>
-</tr>
-{% for i in complaint %}
-<tr>
-    <td>{{forloop.counter}}</td>
-    <td>{{i.complaint_title}}</td>
-    <td>{{i.complaint_content}}</td>
-    <td>{{i.complaint_date}}</td>
-    <td>{{i.complaint_reply}}</td>
-    <td><a href="{%url 'Student:deletecomplaint' i.id%}">delete</a> </td>
-</tr>
-{% endfor %}
-</table>
+
+
+        <table align="center" border="1">
+            <tr>
+                <td>SlNo</td>
+                <td>Title</td>
+                <td>Content</td>
+                <td>Date</td>
+                <td>Reply</td>
+                <td>Action</td>
+            </tr>
+
+            {% for i in complaint %}
+            <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{i.complaint_title}}</td>
+                <td>{{i.complaint_content}}</td>
+                <td>{{i.complaint_date}}</td>
+                <td>{{i.complaint_reply}}</td>
+                <td><a href="{%url 'Student:deletecomplaint' i.id%}">delete</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+
     </form>
-    
+
 </body>
 </html>
+
+{% endblock %}

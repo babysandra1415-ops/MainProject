@@ -46,6 +46,9 @@ urlpatterns = [
   path('cclearchat/',views.cclearchat,name="cclearchat"),
   path('Search/',views.Search,name="Search"),
   path('Notification/',views.Notification,name="Notification"),
+  path('rating/',views.rating,name="rating"),  
+  path('ajaxstar/',views.ajaxstar,name="ajaxstar"),
+  path('starrating/',views.starrating,name="starrating"),
 ] 
 
 

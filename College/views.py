@@ -509,4 +509,57 @@ def Notification(request):
     }
     return render(request, "College/Notification.html", context)
 
+def rating(request):
+    parray=[1,2,3,4,5]
+    # wdata=tbl_booking.objects.get(id=mid)
+    
+    counts=0
+    counts=stardata=tbl_rating.objects.all().count()
+    if counts>0:
+        res=0
+        stardata=tbl_rating.objects.all().order_by('-datetime')
+        for i in stardata:
+            res=res+i.rating_data
+        avg=res//counts
+        # print(avg)
+        return render(request,"College/Rating.html",{'data':stardata,'ar':parray,'avg':avg,'count':counts})
+    else:
+         return render(request,"College/Rating.html")
+
+def ajaxstar(request):
+    parray=[1,2,3,4,5]
+    rating_data=request.GET.get('rating_data')
+    
+    user_review=request.GET.get('user_review')
+    # pid=request.GET.get('pid')
+    # wdata=tbl_booking.objects.get(id=pid)
+    tbl_rating.objects.create(college=tbl_college.objects.get(id=request.session['cid']),user_review=user_review,rating_data=rating_data)
+    stardata=tbl_rating.objects.all().order_by('-datetime')
+    return render(request,"College/AjaxRating.html",{'data':stardata,'ar':parray})
+
+def starrating(request):
+    r_len = 0
+    five = four = three = two = one = 0
+    # cdata = tbl_booking.objects.get(id=request.GET.get("pdt"))
+    rate = tbl_rating.objects.all()
+    ratecount = tbl_rating.objects.all().count()
+    for i in rate:
+        if int(i.rating_data) == 5:
+            five = five + 1
+        elif int(i.rating_data) == 4:
+            four = four + 1
+        elif int(i.rating_data) == 3:
+            three = three + 1
+        elif int(i.rating_data) == 2:
+            two = two + 1
+        elif int(i.rating_data) == 1:
+            one = one + 1
+        else:
+            five = four = three = two = one = 0
+        # print(i.rating_data)
+        # r_len = r_len + int(i.rating_data)
+    # rlen = r_len // 5
+    # print(rlen)
+    result = {"five":five,"four":four,"three":three,"two":two,"one":one,"total_review":ratecount}
+    return JsonResponse(result)
 

@@ -28,3 +28,10 @@ class tbl_chat(models.Model):
     faculty_to = models.ForeignKey(tbl_faculty,on_delete=models.CASCADE,related_name="faculty_to",null=True)
     college_from = models.ForeignKey(tbl_college,on_delete=models.CASCADE,related_name="college_from",null=True)
     college_to = models.ForeignKey(tbl_college,on_delete=models.CASCADE,related_name="college_to",null=True)
+class tbl_rating(models.Model):
+    rating_data=models.IntegerField()
+    student=models.ForeignKey(tbl_student,on_delete=models.CASCADE,null=True)
+    college=models.ForeignKey(tbl_college,on_delete=models.CASCADE,null=True)
+    faculty=models.ForeignKey(tbl_faculty,on_delete=models.CASCADE,null=True)
+    user_review=models.CharField(max_length=500)
+    datetime=models.DateTimeField(auto_now_add=True)

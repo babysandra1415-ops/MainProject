@@ -71,17 +71,25 @@ def ChangePassword(request):
             return render(request,'Student/ChangePassword.html',{"msg2":"Password Incorrect"})
     else:
         return render(request,'Student/ChangePassword.html')
+
+
+
 def ViewNotes(request):
-    student=tbl_student.objects.get(id=request.session["sid"])
-    department=tbl_department.objects.all()
-    notes=tbl_notes.objects.all()
-    semester=tbl_semester.objects.all()
-    if request.method == "POST":
-        subject=tbl_subject.objects.get(id=request.POST.get("sel_subject"))
-        notes=tbl_notes.objects.filter(subject=subject)
-        return render(request,'Student/ViewNotes.html',{"department": department,'semester':semester,'notes':notes})
-    else:
-        return render(request,'Student/ViewNotes.html',{"department": department,'semester':semester,'notes':notes})
+    if "sid" not in request.session:
+        return redirect("Guest/Login.html")
+
+    department = tbl_department.objects.all()
+    semester = tbl_semester.objects.all()
+
+    # initial load → show all notes
+    notes = tbl_notes.objects.all()
+
+    return render(request, 'Student/ViewNotes.html', {
+        "department": department,
+        "semester": semester,
+        "notes": notes
+    })
+
 
 def AjaxCourse(request):
     departmentid = request.GET.get("did")
@@ -89,24 +97,31 @@ def AjaxCourse(request):
     return render(request,"Student/AjaxCourse.html",{'course':course})
 
 def AjaxCompresult(request):
-    did=request.GET.get('did')
-    cid=request.GET.get('cid')
-    sem=request.GET.get('sem')
-    sub=request.GET.get('sub')
-    data=tbl_notes.objects.all()
+    did = request.GET.get('did')
+    cid = request.GET.get('cid')
+    sem = request.GET.get('sem')
+    sub = request.GET.get('sub')
 
-    if did:
-        data=tbl_notes.objects.filter(subject__course__department=did)
-        
-    elif did and cid:
-        data=tbl_notes.objects.filter(subject__course__department=did,subject__course=cid)
-    elif did and cid and sem:
-        data=tbl_notes.objects.filter(subject__course__department=did,subject__course=cid,subject__sem=sem)
-    elif did and cid and sem and sub:
-        data=tbl_notes.objects.filter(subject__course__department=did,subject__course=cid,subject__sem=sem,subject=sub)
-    # else:
-    #     data=tbl_notes.objects.all()
-    return render(request,"Student/Ajaxnotes.html",{'data':data})
+    data = tbl_notes.objects.select_related(
+        "subject",
+        "subject__course",
+        "subject__semester"
+    )
+
+    if did and did != "Department":
+        data = data.filter(subject__course__department_id=did)
+
+    if cid:
+        data = data.filter(subject__course_id=cid)
+
+    if sem and sem != "Semester":
+        data = data.filter(subject__semester_id=sem)
+
+    if sub:
+        data = data.filter(subject_id=sub)
+
+    return render(request, "Student/Ajaxnotes.html", {"data": data})
+
 
 
 def Post(request):
@@ -501,3 +516,58 @@ def Notification(request):
         "news": news
     }
     return render(request, "Student/Notification.html", context)
+
+    
+def rating(request):
+    parray=[1,2,3,4,5]
+    # wdata=tbl_booking.objects.get(id=mid)
+    
+    counts=0
+    counts=stardata=tbl_rating.objects.all().count()
+    if counts>0:
+        res=0
+        stardata=tbl_rating.objects.all().order_by('-datetime')
+        for i in stardata:
+            res=res+i.rating_data
+        avg=res//counts
+        # print(avg)
+        return render(request,"Student/Rating.html",{'data':stardata,'ar':parray,'avg':avg,'count':counts})
+    else:
+         return render(request,"Student/Rating.html")
+
+def ajaxstar(request):
+    parray=[1,2,3,4,5]
+    rating_data=request.GET.get('rating_data')
+    
+    user_review=request.GET.get('user_review')
+    # pid=request.GET.get('pid')
+    # wdata=tbl_booking.objects.get(id=pid)
+    tbl_rating.objects.create(student=tbl_student.objects.get(id=request.session['sid']),user_review=user_review,rating_data=rating_data)
+    stardata=tbl_rating.objects.all().order_by('-datetime')
+    return render(request,"Student/AjaxRating.html",{'data':stardata,'ar':parray})
+
+def starrating(request):
+    r_len = 0
+    five = four = three = two = one = 0
+    # cdata = tbl_booking.objects.get(id=request.GET.get("pdt"))
+    rate = tbl_rating.objects.all()
+    ratecount = tbl_rating.objects.all().count()
+    for i in rate:
+        if int(i.rating_data) == 5:
+            five = five + 1
+        elif int(i.rating_data) == 4:
+            four = four + 1
+        elif int(i.rating_data) == 3:
+            three = three + 1
+        elif int(i.rating_data) == 2:
+            two = two + 1
+        elif int(i.rating_data) == 1:
+            one = one + 1
+        else:
+            five = four = three = two = one = 0
+        # print(i.rating_data)
+        # r_len = r_len + int(i.rating_data)
+    # rlen = r_len // 5
+    # print(rlen)
+    result = {"five":five,"four":four,"three":three,"two":two,"one":one,"total_review":ratecount}
+    return JsonResponse(result)
