@@ -43,4 +43,5 @@ urlpatterns = [
   path('Reply/<int:rrid>',views.Reply,name="Reply"),
   path('Addnews/',views.Addnews,name="Addnews"),
   path('delnews/<int:did>',views.delnews,name="delnews"),
+  path('Logout/',views.Logout,name='Logout'),
 ]

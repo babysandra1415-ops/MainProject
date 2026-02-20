@@ -301,5 +301,9 @@ def delnews(request,did):
     tbl_news.objects.get(id=did).delete()
     return redirect("Admin:Addnews")
 
+def Logout(request):
+    del request.session["aid"]       
+    return redirect("Guest:Login")
+
 
 

@@ -21,7 +21,8 @@ class tbl_complaint(models.Model):
 class tbl_chat(models.Model):
     chat_content = models.CharField(max_length=500)
     chat_time = models.DateTimeField()
-    chat_file = models.FileField(upload_to='ChatFiles/')
+    chat_file = models.FileField(upload_to='ChatFiles/', blank=True, null=True)
+    chat_seen = models.BooleanField(default=False)
     student_from = models.ForeignKey(tbl_student,on_delete=models.CASCADE,related_name="student_from",null=True)
     student_to = models.ForeignKey(tbl_student,on_delete=models.CASCADE,related_name="student_to",null=True)
     faculty_from = models.ForeignKey(tbl_faculty,on_delete=models.CASCADE,related_name="faculty_from",null=True)

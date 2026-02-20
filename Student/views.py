@@ -383,8 +383,63 @@ def deletecomplaint(request,did):
 
 
 
+def ChatList(request):
+    """Instagram-style unified chat list: only followed people, with seen/unseen counts."""
+    if "sid" not in request.session:
+        return redirect("Guest:Login")
+    student = tbl_student.objects.get(id=request.session["sid"])
+    conversations = []
+    # People student follows (accepted)
+    following = tbl_follow.objects.filter(fromstudent=student, follow_status=1)
+    for f in following:
+        if f.tostudent:
+            other_id, other_type = f.tostudent_id, "student"
+            name = f.tostudent.student_name
+            photo = f.tostudent.student_photo
+            chat_filter = (Q(student_from=student) | Q(student_to=student)) & (Q(student_from=f.tostudent) | Q(student_to=f.tostudent))
+        elif f.tofaculty:
+            other_id, other_type = f.tofaculty_id, "faculty"
+            name = f.tofaculty.faculty_name
+            photo = f.tofaculty.faculty_photo
+            chat_filter = (Q(student_from=student) | Q(student_to=student)) & (Q(faculty_from=f.tofaculty) | Q(faculty_to=f.tofaculty))
+        elif f.tocollege:
+            other_id, other_type = f.tocollege_id, "college"
+            name = f.tocollege.college_name
+            photo = f.tocollege.college_photo
+            chat_filter = (Q(student_from=student) | Q(student_to=student)) & (Q(college_from=f.tocollege) | Q(college_to=f.tocollege))
+        else:
+            continue
+        last_chat = tbl_chat.objects.filter(chat_filter).order_by('-chat_time').first()
+        unseen = tbl_chat.objects.filter(chat_filter, chat_seen=False)
+        unseen = unseen.filter(student_to=student)
+        unseen_count = unseen.count()
+        conversations.append({
+            "other_id": other_id, "other_type": other_type, "name": name, "photo": photo,
+            "last_chat": last_chat, "unseen_count": unseen_count
+        })
+    def sort_key(c):
+        if c["last_chat"]:
+            return (1, c["last_chat"].chat_time)
+        return (0, datetime(1970, 1, 1))
+    conversations.sort(key=sort_key, reverse=True)
+    return render(request, "Student/ChatList.html", {"conversations": conversations, "Student": student})
+
+def ajaxchatseen(request):
+    """Mark messages as seen when opening chat."""
+    tid = request.GET.get("tid")
+    utype = request.GET.get("utype", "student")
+    user = tbl_student.objects.get(id=request.session["sid"])
+    if utype == "student":
+        tbl_chat.objects.filter(student_from_id=tid, student_to=user, chat_seen=False).update(chat_seen=True)
+    elif utype == "faculty":
+        tbl_chat.objects.filter(faculty_from_id=tid, student_to=user, chat_seen=False).update(chat_seen=True)
+    elif utype == "college":
+        tbl_chat.objects.filter(college_from_id=tid, student_to=user, chat_seen=False).update(chat_seen=True)
+    return JsonResponse({"ok": True})
+
 def chatpage(request,id):
     student  = tbl_student.objects.get(id=id)
+    tbl_chat.objects.filter(student_from_id=id, student_to=request.session["sid"], chat_seen=False).update(chat_seen=True)
     return render(request,"Student/Chat.html",{"student":student})
 
 def ajaxchat(request):
@@ -407,6 +462,7 @@ def clearchat(request):
 
 def fchatpage(request,id):
     faculty  = tbl_faculty.objects.get(id=id)
+    tbl_chat.objects.filter(faculty_from_id=id, student_to=request.session["sid"], chat_seen=False).update(chat_seen=True)
     return render(request,"Student/FChat.html",{"faculty":faculty})
 
 def fajaxchat(request):
@@ -427,6 +483,7 @@ def fclearchat(request):
 
 def cchatpage(request,id):
     college  = tbl_college.objects.get(id=id)
+    tbl_chat.objects.filter(college_from_id=id, student_to=request.session["sid"], chat_seen=False).update(chat_seen=True)
     return render(request,"Student/CChat.html",{"college":college})
 
 def cajaxchat(request):
@@ -571,3 +628,6 @@ def starrating(request):
     # print(rlen)
     result = {"five":five,"four":four,"three":three,"two":two,"one":one,"total_review":ratecount}
     return JsonResponse(result)
+def Logout(request):
+    del request.session["sid"]       
+    return redirect("Guest:Login")

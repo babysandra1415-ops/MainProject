@@ -261,6 +261,25 @@
         font-size: 13px;
         margin-bottom: 10px;
     }
+    .fb-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background-color: #6c8cfc;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.fb-btn:hover{
+    background-color: #5d7ff9;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
 </style>
 <body>
     <div class="blur-page" id="b-page">
@@ -271,13 +290,13 @@
             <div class="sk-cube3 sk-cube"></div>
         </div>
     </div>
-    <div class="profile" id="profile">
+    <div class="profile" id="profile"> 
         <div>
             <div class="profile-close" onclick="close_profile()">
                 <i class="fa-regular fa-circle-xmark cl-ic"></i>
             </div>
             <div>
-                <img src="{{ student.student_photo.url }}" width="300px" height="300px" alt="">
+                <img src="{{ student.student_photo.url }}" width="300px" height="300px" alt="">  
             </div>
         </div>
     </div>    
@@ -286,8 +305,8 @@
             <div class="head-sec" id="changeable">
                 <div class="content">
                     <div  onclick="open_profile()">
-                        <img src="{{ student.student_photo.url }}" width="40px" height="40px" style="border-radius: 50%;" alt="">
-                    </div>
+                    <a href="../ChatList/" class="fb-btn">&#8592;</a>
+                    </div> <img src="{{ student.student_photo.url }}" width="40px" height="40px" style="border-radius: 50%;" alt="">  
                     <div class="font">
                         {{student.student_name}}
                         <input type="hidden" name="txt_id" id="txt_id" value="{{student.id}}">

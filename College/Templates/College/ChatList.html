@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 1rem; background: #f3f4f6; }
+        .nav { margin-bottom: 1rem; }
+        .nav a { margin-right: 1rem; text-decoration: none; color: #4a6dff; }
+        .chatlist-container { max-width: 560px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden; }
+        .chatlist-header { padding: 1rem 1.25rem; background: #4a6dff; color: white; font-size: 1.25rem; font-weight: 600; }
+        .chat-item { display: flex; align-items: center; padding: 1rem 1.25rem; text-decoration: none; color: inherit; border-bottom: 1px solid #f3f4f6; }
+        .chat-item:hover { background: #f9fafb; }
+        .chat-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 1rem; }
+        .chat-info { flex: 1; min-width: 0; }
+        .chat-name { font-weight: 600; color: #1f2937; }
+        .chat-preview { font-size: 0.9rem; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .chat-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+        .chat-time { font-size: 0.75rem; color: #9ca3af; }
+        .unseen-badge { background: #4a6dff; color: white; font-size: 0.75rem; font-weight: 600; min-width: 22px; height: 22px; border-radius: 11px; display: flex; align-items: center; justify-content: center; }
+        .empty-state { padding: 3rem 2rem; text-align: center; color: #6b7280; }
+    </style>
+</head>
+<body>
+<div class="nav">
+    <a href="{% url 'College:HomePage' %}">Home</a>
+    <a href="{% url 'College:Followers' %}">Connections</a>
+</div>
+<div class="chatlist-container">
+    <div class="chatlist-header"><i class="fas fa-comments"></i> Messages</div>
+    {% for c in conversations %}
+    <a href="{% if c.other_type == 'student' %}{% url 'College:schatpage' c.other_id %}{% elif c.other_type == 'faculty' %}{% url 'College:fchatpage' c.other_id %}{% else %}{% url 'College:chatpage' c.other_id %}{% endif %}" class="chat-item">
+        <img src="{{ c.photo.url }}" alt="" class="chat-avatar">
+        <div class="chat-info">
+            <div class="chat-name">{{ c.name }}</div>
+            <div class="chat-preview">
+                {% if c.last_chat %}
+                    {% if c.last_chat.chat_file %}📎 Attachment{% else %}{{ c.last_chat.chat_content|truncatechars:40 }}{% endif %}
+                {% else %}
+                    No messages yet
+                {% endif %}
+            </div>
+        </div>
+        <div class="chat-meta">
+            {% if c.last_chat %}<span class="chat-time">{{ c.last_chat.chat_time|timesince }} ago</span>{% endif %}
+            {% if c.unseen_count %}<span class="unseen-badge">{{ c.unseen_count }}</span>{% endif %}
+        </div>
+    </a>
+    {% empty %}
+    <div class="empty-state">No conversations. Follow people from Connections to start chatting.</div>
+    {% endfor %}
+</div>
+</body>
+</html>

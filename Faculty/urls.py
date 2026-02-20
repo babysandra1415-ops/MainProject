@@ -29,6 +29,8 @@ urlpatterns = [
   path('rejectrequest/<int:rid>',views.rejectrequest,name="rejectrequest"),
   path('Complaint',views.Complaint,name="Complaint"),
   path('deletecomplaint/<int:did>',views.deletecomplaint,name="deletecomplaint"),
+  path('ChatList/',views.ChatList,name="ChatList"),
+  path('ajaxchatseen/',views.ajaxchatseen,name="ajaxchatseen"),
   path('chatpage/<int:id>',views.chatpage,name="chatpage"),
   path('ajaxchat/',views.ajaxchat,name="ajaxchat"),
   path('ajaxchatview/',views.ajaxchatview,name="ajaxchatview"),
@@ -49,6 +51,7 @@ urlpatterns = [
   path('rating/',views.rating,name="rating"),  
   path('ajaxstar/',views.ajaxstar,name="ajaxstar"),
   path('starrating/',views.starrating,name="starrating"),
+  path('Logout/',views.Logout,name='Logout'),
 ] 
 
 

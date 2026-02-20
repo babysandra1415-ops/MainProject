@@ -262,6 +262,25 @@
         font-size: 13px;
         margin-bottom: 10px;
     }
+    .fb-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background-color: #6c8cfc;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 50%;
+    font-size: 20px;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.fb-btn:hover{
+    background-color: #5d7ff9;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
 </style>
 <body>
     <div class="blur-page" id="b-page">
@@ -285,9 +304,9 @@
     <div class="par-card">
         <div class="chat-card">
             <div class="head-sec" id="changeable">
-                <div class="content">
+                    <a href="../ChatList/" class="fb-btn">&#8592;</a>    <img src="{{faculty.faculty_photo.url}}" width="40px" height="40px" style="border-radius: 50%;" alt="">
+                <div class="content">  
                     <div  onclick="open_profile()">
-                        <img src="{{faculty.faculty_photo.url}}" width="40px" height="40px" style="border-radius: 50%;" alt="">
                     </div>
                     <div class="font">
                         {{faculty.faculty_name}}
